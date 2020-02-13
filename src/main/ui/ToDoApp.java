@@ -45,8 +45,8 @@ public class ToDoApp {
             this.addTask();
         } else if (command.equals("2")) {
             this.displayToDoList();
-//        } else if (command.equals("3")) {
-//            this.removeTask();
+        } else if (command.equals("3")) {
+            this.removeTask();
         } else {
             System.out.println("Selection not valid...");
         }
@@ -73,20 +73,19 @@ public class ToDoApp {
         }
     }
 
-//    private void removeTask() {
-//        System.out.print("Enter the task name to remove it. \n");
-//        System.out.print("If the task does not match any existing task, there will be an error. \n");
-//        String taskname;
-//        taskname = input.next();
-//
-//            }
-//            System.out.print("Task Removed");
-//            else {
-//                System.out.print("No Matching Task");
-//            }
-//        }
-//
-//    }
+    private void removeTask() {
+        System.out.print("Enter the task name to remove it. \n");
+        System.out.print("If the task does not match any existing task, there will be an error. \n");
+        String taskName;
+        taskName = input.next();
+        int pos = toDoList.taskPosition(taskName);
+        if (pos == -1) {
+            System.out.print("No Matching Task \n");
+        } else {
+            toDoList.removeTask(pos);
+            System.out.print("Task Removed \n");
+        }
+    }
 
     // MODIFIES: this
     // EFFECTS: initializes accounts
@@ -100,6 +99,7 @@ public class ToDoApp {
         System.out.println("Welcome! Enter:");
         System.out.println("- '1' to add a task");
         System.out.println("- '2' to view tasks");
+        System.out.println("- '3' to delete a task");
         System.out.println("- 'q' to quit");
     }
 }

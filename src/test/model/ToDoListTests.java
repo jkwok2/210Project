@@ -56,7 +56,6 @@ class ToDoListTests {
     @Test
     void testConvertToDoListToString() {
         todoList2.convertToDoListToString();
-
     }
 
     @Test
