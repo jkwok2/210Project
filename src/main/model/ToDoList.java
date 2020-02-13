@@ -23,6 +23,26 @@ public class ToDoList {
         numNotStarted++;
     }
 
+    // MODIFIES: TaskItem Status
+    public void taskCompletedInToDo(String name) {
+        for (TaskItem ti : toDoList) {
+            if (ti.getTaskName() == name) {
+                ti.changeTaskStatusToCompleted();
+                this.numCompleted++;
+            }
+        }
+    }
+
+    // MODIFIES: TaskItem Status
+    public void taskInProgressInToDo(String name) {
+        for (TaskItem ti : toDoList) {
+            if (ti.getTaskName() == name) {
+                ti.changeTaskStatusToInProgress();
+                this.numInProgress++;
+            }
+        }
+    }
+
     // remove that specific item in the toDoList
     public ArrayList<TaskItem> removeTask(int pos) {
         TaskItem ti;
@@ -32,7 +52,16 @@ public class ToDoList {
     }
 
     public ArrayList<TaskItem> getToDoList() {
-        return this.toDoList;
+        return toDoList;
+    }
+
+    public ArrayList<String> convertToDoListToString() {
+        ArrayList<TaskItem> a1 = getToDoList();
+        ArrayList<String> output = new ArrayList<>();
+        for (TaskItem i : a1) {
+            output.add(i.getTaskName());
+        }
+        return output;
     }
 
     // Check whether a given string matches the name of any TaskItem in the TodoList

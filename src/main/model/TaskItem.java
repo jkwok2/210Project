@@ -8,7 +8,7 @@ public class TaskItem {
     public TaskItem() {
         this.taskName = "";
         this.description = "";
-        status = "NotStarted";
+        status = "Not Started";
     }
 
     public void addTaskName(String taskName) {
@@ -21,20 +21,20 @@ public class TaskItem {
 
     // MODIFIES: this
     // EFFECTS: Sets status to InProgress
-    public void changeInProgress() {
-        this.status = "InProgress";
+    public void changeTaskStatusToInProgress() {
+        this.status = "In Progress";
     }
 
     // MODIFIES: this
     // EFFECTS: Sets status to Completed
-    public void changeCompleted() {
+    public void changeTaskStatusToCompleted() {
         this.status = "Completed";
     }
 
     // MODIFIES: this
     // EFFECTS: Sets status to NotStarted
-    public void changeNotStarted() {
-        this.status = "NotStarted";
+    public void changeTaskStatusToNotStarted() {
+        this.status = "Not Started";
     }
 
     // EFFECTS: Returns the name of a TaskItem

@@ -79,7 +79,6 @@ public class ToDoApp {
 //        String taskname;
 //        taskname = input.next();
 //
-//
 //            }
 //            System.out.print("Task Removed");
 //            else {
