@@ -24,9 +24,11 @@ public class ToDoList {
     }
 
     // MODIFIES: TaskItem Status
+    // EFFECTS: Compares the given string against the name of the TaskItems. If there is a match, the status of the
+    //          TaskItem is changed to completed and the completed counter is incremented.
     public void taskCompletedInToDo(String name) {
         for (TaskItem ti : toDoList) {
-            if (ti.getTaskName() == name) {
+            if (ti.getTaskName().equals(name)) {
                 ti.changeTaskStatusToCompleted();
                 this.numCompleted++;
             }
@@ -34,16 +36,20 @@ public class ToDoList {
     }
 
     // MODIFIES: TaskItem Status
+    // EFFECTS: Compares the given string against the name of the TaskItems. If there is a match, the status of the
+    //          TaskItem is changed to completed and the In Progress counter is incremented.
     public void taskInProgressInToDo(String name) {
         for (TaskItem ti : toDoList) {
-            if (ti.getTaskName() == name) {
+            if (ti.getTaskName().equals(name)) {
                 ti.changeTaskStatusToInProgress();
                 this.numInProgress++;
             }
         }
     }
 
-    // remove that specific item in the toDoList
+    // REQUIRES: pos > 0
+    // MODIFIES: this
+    // EFFECTS: Given pos, remove that specific item in the toDoList
     public ArrayList<TaskItem> removeTask(int pos) {
         TaskItem ti;
         ti = toDoList.get(pos);
@@ -55,6 +61,7 @@ public class ToDoList {
         return toDoList;
     }
 
+    // EFFECTS: Converts a List to String
     public ArrayList<String> convertToDoListToString() {
         ArrayList<TaskItem> a1 = getToDoList();
         ArrayList<String> output = new ArrayList<>();
@@ -64,7 +71,7 @@ public class ToDoList {
         return output;
     }
 
-    // Check whether a given string matches the name of any TaskItem in the TodoList
+    // EFFECTS: Check whether a given string matches the name of any TaskItem in the TodoList
     public int taskPosition(String givenTaskName) {
         int counter = 0;
         for (TaskItem ti : toDoList) {

@@ -11,10 +11,12 @@ public class TaskItem {
         status = "Not Started";
     }
 
+    // EFFECTS: Gets the name of a TaskItem
     public void addTaskName(String taskName) {
         this.taskName = taskName;
     }
 
+    // EFFECTS: Gets the description of a TaskItem
     public void addDescription(String taskDescription) {
         this.description = taskDescription;
     }

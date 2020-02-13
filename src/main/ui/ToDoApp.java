@@ -41,17 +41,23 @@ public class ToDoApp {
     // MODIFIES: this
     // EFFECTS: processes user command
     private void processCommand(String command) {
-        if (command.equals("1")) {
-            this.addTask();
-        } else if (command.equals("2")) {
-            this.displayToDoList();
-        } else if (command.equals("3")) {
-            this.removeTask();
-        } else {
-            System.out.println("Selection not valid...");
+        switch (command) {
+            case "1":
+                this.addTask();
+                break;
+            case "2":
+                this.displayToDoList();
+                break;
+            case "3":
+                this.removeTask();
+                break;
+            default:
+                System.out.println("Selection not valid...");
+                break;
         }
     }
 
+    // EFFECTS: Adds a task
     private void addTask() {
         System.out.print("Enter Task name: ");
         taskItem = new TaskItem();
@@ -67,12 +73,14 @@ public class ToDoApp {
         System.out.print(taskItem.getTaskName() + "\n");
     }
 
+    // EFFECTS: Displays ToDoList
     private void displayToDoList() {
         for (TaskItem ti : toDoList.getToDoList()) {
             System.out.println(ti.getTaskName());
         }
     }
 
+    // EFFECTS: Removes a Task
     private void removeTask() {
         System.out.print("Enter the task name to remove it. \n");
         System.out.print("If the task does not match any existing task, there will be an error. \n");
@@ -93,8 +101,8 @@ public class ToDoApp {
         toDoList = new ToDoList();
         input = new Scanner(System.in);
     }
-    // EFFECTS: displays menu of options to user
 
+    // EFFECTS: displays menu of options to user
     private void displayMenu() {
         System.out.println("Welcome! Enter:");
         System.out.println("- '1' to add a task");
