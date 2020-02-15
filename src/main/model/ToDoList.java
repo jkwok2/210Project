@@ -41,7 +41,14 @@ public class ToDoList {
     public void taskInProgressInToDo(String name) {
         for (TaskItem ti : toDoList) {
             if (ti.getTaskName().equals(name)) {
+                String status;
+                status = ti.getStatus();
                 ti.changeTaskStatusToInProgress();
+                if (status.equals("Not Started")) {
+                    this.numNotStarted--;
+                } else if (status.equals("Completed")) {
+                    this.numCompleted--;
+                }
                 this.numInProgress++;
             }
         }
@@ -81,5 +88,17 @@ public class ToDoList {
             }
         }
         return -1;
+    }
+
+    public int getNumberOfTasksNotStarted() {
+        return numNotStarted;
+    }
+
+    public int getToDoListSize() {
+        return toDoList.size();
+    }
+
+    public TaskItem getTaskItem(int itemNumber) {
+        return toDoList.get(itemNumber);
     }
 }
