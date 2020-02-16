@@ -3,7 +3,6 @@ package ui;
 import model.TaskItem;
 import model.ToDoList;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class ToDoApp {
@@ -13,6 +12,7 @@ public class ToDoApp {
     private TaskItem taskItem;
     String taskName;
     String newStatus;
+    String taskNumber;
 
     // EFFECTS: runs the teller application
     public ToDoApp() {
@@ -66,7 +66,13 @@ public class ToDoApp {
     }
 
     private void displayStatusStats() {
-        System.out.print("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + "\n");
+        if (toDoList.getToDoListSize() == 0) {
+            printNoTasksInList();
+        } else {
+            System.out.print("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + "\n");
+            System.out.print("Tasks In Progress: " + toDoList.getNumberOfTasksInProgress() + "\n");
+            System.out.print("Tasks Completed: " + toDoList.getNumberOfTasksCompleted() + "\n");
+        }
     }
 
     // EFFECTS: Adds a task
@@ -75,11 +81,20 @@ public class ToDoApp {
         taskItem = new TaskItem();
         String taskName;
         taskName = input.next();
-        taskItem.addTaskName(taskName);
+        taskItem.changeTaskName(taskName);
         System.out.print("Enter description of the task: ");
         String description;
+        /* Add code for optional input */
         description = input.next();
-        taskItem.addDescription(description);
+        taskItem.changeDescription(description);
+        for (TaskItem ti : toDoList.getToDoList()) {
+            if (ti.getTaskName().equals(taskItem.getTaskName())) {
+                System.out.print(
+                        "Note - You have a duplicate task in your list. Deleting or changing the status of one task "
+                                + "will affect all with the same name. \n");
+                break;
+            }
+        }
         System.out.print("You have added the task: ");
         toDoList.addTask(taskItem);
         System.out.print(taskItem.getTaskName() + "\n");
@@ -87,26 +102,41 @@ public class ToDoApp {
 
     // EFFECTS: Displays ToDoList
     private void displayToDoList() {
-        int counter = 1;
-        for (TaskItem ti : toDoList.getToDoList()) {
-            System.out.println("Task " + counter + ": " + ti.getTaskName() + " / Status: " + ti.getStatus());
-            counter++;
+        if (toDoList.getToDoListSize() == 0) {
+            printNoTasksInList();
+        } else {
+            int counter = 1;
+            for (TaskItem ti : toDoList.getToDoList()) {
+                System.out.println(
+                        "Task [" + counter + "]: " + ti.getTaskName() + " / Status: " + ti.getStatus()
+                                + " / Description: " + ti.getDescription());
+                counter++;
+            }
         }
     }
 
     // EFFECTS: Prints text to indicate input String and TaskItem name must match exactly.
     private boolean displayTextExactMatch() {
         if (toDoList.getToDoListSize() == 0) {
-            System.out.print("There are no tasks in the current list. \n");
+            printNoTasksInList();
             return false;
         } else {
-            System.out.print("Your input must match the task name exactly (including spacing and case). \n");
+
+            System.out.print(
+                    "Displayed below are the current tasks. Enter the number in front of the task to remove it. \n");
+            displayToDoList();
             System.out.print("Otherwise, the task may not be found properly. ");
             System.out.print("Enter the task name: \n");
             taskName = input.next();
+            // Added variable String = taskNumber; change taskName to taskNumber
             return true;
         }
     }
+
+    private void printNoTasksInList() {
+        System.out.print("There are no tasks in the current list. \n");
+    }
+
 
     // EFFECTS: Removes a Task
     private void removeTask() {
@@ -132,14 +162,14 @@ public class ToDoApp {
                 newStatus = input.next();
             }
             switch (newStatus) {
-                case "1":
-                    toDoList.getTaskItem(pos).changeTaskStatusToNotStarted();
+                case "2":
+                    toDoList.taskInProgressInToDo(taskName);
                     break;
                 case "3":
-                    toDoList.getTaskItem(pos).changeTaskStatusToCompleted();
+                    toDoList.taskCompletedInToDo(taskName);
                     break;
-                case "2":
-                    toDoList.getTaskItem(pos).changeTaskStatusToInProgress();
+                case "1":
+                    toDoList.taskNotStartedToDo(taskName);
                     break;
                 default:
                     System.out.print("Not a Valid Status\n");

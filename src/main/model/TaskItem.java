@@ -12,12 +12,12 @@ public class TaskItem {
     }
 
     // EFFECTS: Gets the name of a TaskItem
-    public void addTaskName(String taskName) {
+    public void changeTaskName(String taskName) {
         this.taskName = taskName;
     }
 
     // EFFECTS: Gets the description of a TaskItem
-    public void addDescription(String taskDescription) {
+    public void changeDescription(String taskDescription) {
         this.description = taskDescription;
     }
 

@@ -9,6 +9,7 @@ public class ToDoList {
     int numCompleted;
     int numInProgress;
     int numNotStarted;
+    String status;
 
     public ToDoList() {
         toDoList = new ArrayList<>();
@@ -29,7 +30,13 @@ public class ToDoList {
     public void taskCompletedInToDo(String name) {
         for (TaskItem ti : toDoList) {
             if (ti.getTaskName().equals(name)) {
+                status = ti.getStatus();
                 ti.changeTaskStatusToCompleted();
+                if (status.equals("Not Started")) {
+                    this.numNotStarted--;
+                } else if (status.equals("In Progress")) {
+                    this.numInProgress--;
+                }
                 this.numCompleted++;
             }
         }
@@ -41,7 +48,6 @@ public class ToDoList {
     public void taskInProgressInToDo(String name) {
         for (TaskItem ti : toDoList) {
             if (ti.getTaskName().equals(name)) {
-                String status;
                 status = ti.getStatus();
                 ti.changeTaskStatusToInProgress();
                 if (status.equals("Not Started")) {
@@ -50,6 +56,24 @@ public class ToDoList {
                     this.numCompleted--;
                 }
                 this.numInProgress++;
+            }
+        }
+    }
+
+    // MODIFIES: TaskItem Status
+    // EFFECTS: Compares the given string against the name of the TaskItems. If there is a match, the status of the
+    //          TaskItem is changed to completed and the In Progress counter is incremented.
+    public void taskNotStartedToDo(String name) {
+        for (TaskItem ti : toDoList) {
+            if (ti.getTaskName().equals(name)) {
+                status = ti.getStatus();
+                ti.changeTaskStatusToNotStarted();
+                if (status.equals("In Progress")) {
+                    this.numInProgress--;
+                } else if (status.equals("Completed")) {
+                    this.numCompleted--;
+                }
+                this.numNotStarted++;
             }
         }
     }
@@ -92,6 +116,14 @@ public class ToDoList {
 
     public int getNumberOfTasksNotStarted() {
         return numNotStarted;
+    }
+
+    public int getNumberOfTasksInProgress() {
+        return numInProgress;
+    }
+
+    public int getNumberOfTasksCompleted() {
+        return numCompleted;
     }
 
     public int getToDoListSize() {

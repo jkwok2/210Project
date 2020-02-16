@@ -2,7 +2,6 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import javafx.concurrent.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +28,7 @@ public class TaskItemTests {
 
     @Test
     public void testGetDescription() {
-        taskItem1.addDescription("Sample Description");
+        taskItem1.changeDescription("Sample Description");
         assertEquals("Sample Description", taskItem1.getDescription());
     }
 
