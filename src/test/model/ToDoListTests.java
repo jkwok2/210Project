@@ -140,4 +140,25 @@ class ToDoListTests {
         todoList2.getTaskItem(1).changeTaskStatusToCompleted();
         assertEquals("Completed", todoList2.getTaskItem(1).getStatus());
     }
+
+    @Test
+    public void testChangePriority() {
+        assertEquals(0, todoList2.getTaskItem(3).getPriority());
+        todoList2.getTaskItem(3).changePriority(1);
+        assertEquals(1, todoList2.getTaskItem(3).getPriority());
+    }
+
+    @Test
+    public void testChangeEstimateTime() {
+        assertEquals(0, todoList2.getTaskItem(2).getEstimatedTime());
+        todoList2.getTaskItem(2).changeEstimateTime(180);
+        assertEquals(180, todoList2.getTaskItem(2).getEstimatedTime());
+    }
+
+    @Test
+    public void testChangeActualTime() {
+        assertEquals(0, todoList2.getTaskItem(1).getActualTime());
+        todoList2.getTaskItem(1).changeActualTime(30);
+        assertEquals(30, todoList2.getTaskItem(1).getActualTime());
+    }
 }

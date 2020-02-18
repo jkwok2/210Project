@@ -3,16 +3,18 @@ package ui;
 import model.TaskItem;
 import model.ToDoList;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class ToDoApp {
     //fields
     private Scanner input;
+    private final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     private ToDoList toDoList;
     private TaskItem taskItem;
-    String taskName;
-    String newStatus;
-    String taskNumber;
+    private String taskName;
+    private String newStatus;
 
     // EFFECTS: runs the teller application
     public ToDoApp() {
@@ -59,15 +61,57 @@ public class ToDoApp {
             case "5":
                 this.changeTaskStatus();
                 break;
+//                TODO
+            case "6":
+                this.changeNameOrDescriptionInit();
+                break;
+//            case "7":
+//            change priority, length of tasks
+//            case "8":
+//            instruction manual
             default:
                 System.out.println("Selection not valid...");
                 break;
         }
     }
 
+    private void changeNameOrDescriptionInit() {
+        if (toDoList.getToDoListSize() == 0) {
+            noTasksInList();
+        } else {
+            System.out.print("Enter '1' to change task name or '2' to change task description\n");
+            String changeTaskInput = input.next();
+            if (changeTaskInput.equals("1")) {
+                changeTaskName();
+            } else if (changeTaskInput.equals("2")) {
+                changeTaskDescription();
+            } else {
+                System.out.print("Not a valid selection. Please try again\n");
+            }
+        }
+    }
+
+    private void changeTaskName() {
+//        TODO: potentially combine the match string code (which the remove and change taskStatus) also uses
+        System.out.print("");
+        // Prompt for input - what is the name of the task you want to change?
+        // Change task method
+        // if there are duplicates - ask if you want to change the first, second or third task...
+        // Your task name has been changed!
+    }
+
+    private void changeTaskDescription() {
+//        TODO
+        System.out.print("campiest");
+        // Prompt for input - what is the description of the task you want to change?
+        // Change task method
+        // if there are duplicates - ask if you want to change the first, second or third task...
+        // Your task name has been changed!
+    }
+
     private void displayStatusStats() {
         if (toDoList.getToDoListSize() == 0) {
-            printNoTasksInList();
+            noTasksInList();
         } else {
             System.out.print("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + "\n");
             System.out.print("Tasks In Progress: " + toDoList.getNumberOfTasksInProgress() + "\n");
@@ -79,13 +123,11 @@ public class ToDoApp {
     private void addTask() {
         System.out.print("Enter Task name: ");
         taskItem = new TaskItem();
-        String taskName;
-        taskName = input.next();
+        String taskName = input.next();
         taskItem.changeTaskName(taskName);
-        System.out.print("Enter description of the task: ");
-        String description;
+        System.out.print("Enter description of the task: ");;
         /* Add code for optional input */
-        description = input.next();
+        String description = input.next();
         taskItem.changeDescription(description);
         for (TaskItem ti : toDoList.getToDoList()) {
             if (ti.getTaskName().equals(taskItem.getTaskName())) {
@@ -103,7 +145,7 @@ public class ToDoApp {
     // EFFECTS: Displays ToDoList
     private void displayToDoList() {
         if (toDoList.getToDoListSize() == 0) {
-            printNoTasksInList();
+            noTasksInList();
         } else {
             int counter = 1;
             for (TaskItem ti : toDoList.getToDoList()) {
@@ -118,22 +160,22 @@ public class ToDoApp {
     // EFFECTS: Prints text to indicate input String and TaskItem name must match exactly.
     private boolean displayTextExactMatch() {
         if (toDoList.getToDoListSize() == 0) {
-            printNoTasksInList();
+            noTasksInList();
             return false;
         } else {
 
             System.out.print(
-                    "Displayed below are the current tasks. Enter the number in front of the task to remove it. \n");
+                    "Displayed below are the current tasks. Enter the task name to remove it. \n");
             displayToDoList();
-            System.out.print("Otherwise, the task may not be found properly. ");
+            System.out.print(
+                    "Your entry must match the task name exactly; any typo may result in an error. ");
             System.out.print("Enter the task name: \n");
             taskName = input.next();
-            // Added variable String = taskNumber; change taskName to taskNumber
             return true;
         }
     }
 
-    private void printNoTasksInList() {
+    private void noTasksInList() {
         System.out.print("There are no tasks in the current list. \n");
     }
 
@@ -193,6 +235,7 @@ public class ToDoApp {
         System.out.println("- '3' to delete a task");
         System.out.println("- '4' to get task status stats");
         System.out.println("- '5' to change task status");
+        System.out.println("- '6' to change a task name or description");
         System.out.println("- 'q' to quit");
     }
 }
