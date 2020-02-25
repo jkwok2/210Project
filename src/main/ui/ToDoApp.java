@@ -2,12 +2,14 @@ package ui;
 
 import model.TaskItem;
 import model.ToDoList;
+import org.json.simple.parser.ParseException;
+import persistence.Reader;
 import persistence.Writer;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.Scanner;
+// Referenced: https://mkyong.com/java/json-simple-example-read-and-write-json/
+
 
 public class ToDoApp {
     //fields
@@ -31,6 +33,14 @@ public class ToDoApp {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadToDoList() {
+        try {
+            FileReader reader = new FileReader(new File(TODO_FILE));
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }

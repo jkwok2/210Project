@@ -18,6 +18,15 @@ public class ToDoList {
         numInProgress = 0;
     }
 
+    public ToDoList(
+            ArrayList<TaskItem> toDoList, int numTasks, int numNotStarted, int numCompleted, int numInProgress) {
+        this.toDoList = toDoList;
+        this.numTasks = numTasks;
+        this.numNotStarted = numNotStarted;
+        this.numCompleted = numCompleted;
+        this.numInProgress = numInProgress;
+    }
+
     public void addTask(TaskItem ti) {
         toDoList.add(ti);
         numNotStarted++;
