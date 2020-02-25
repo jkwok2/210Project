@@ -120,8 +120,17 @@ public class ToDoApp {
     }
 
     private void changeTaskDescription() {
-//        TODO
-        System.out.print("campiest");
+        if (displayTextExactMatch()) {
+            int pos = toDoList.taskPosition(taskName);
+            if (pos == -1) {
+                System.out.print("No Matching Task. Returning to the Welcome Screen... \n");
+            } else {
+                System.out.println("Enter a new description...");
+                String description = input.nextLine();
+                toDoList.getTaskItem(pos).changeDescription(description);
+                System.out.print("Description changed. Returning to the Welcome Screen... \n");
+            }
+        }
         // Prompt for input - what is the description of the task you want to change?
         // Change task method
         // if there are duplicates - ask if you want to change the first, second or third task...
