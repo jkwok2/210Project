@@ -27,7 +27,7 @@ public class ToDoApp {
         init();
         while (runStatus) {
             displayMenu();
-            command = input.nextLine();
+            command = input.next();
             command = command.toLowerCase();
             if (command.equals("q")) {
                 runStatus = false;
@@ -36,7 +36,7 @@ public class ToDoApp {
             }
         }
 
-        System.out.println("\nGoodbye! Thank you for using the Jeff's To-Do List!");
+        System.out.println("\nGoodbye! Thank you for using Jeff's To-Do List!");
     }
 
     // MODIFIES: this
