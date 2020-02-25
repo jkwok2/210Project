@@ -20,7 +20,7 @@ public class Writer {
     }
 
     // MODIFIES: this
-    // EFFECTS: writes saveable to file
+    // EFFECTS: writes to file
     public void write(String toDoList) {
         printWriter.write(toDoList);
     }
@@ -34,21 +34,25 @@ public class Writer {
 
     public void saveData(ToDoList toDoList) {
         JSONObject obj = new JSONObject();
+
         JSONArray toDoListTaskItemName = new JSONArray();
+        JSONArray toDoListTaskItemDescription = new JSONArray();
+        JSONArray toDoListTaskItemStatus = new JSONArray();
+
         for (TaskItem ti : toDoList.getToDoList()) {
             toDoListTaskItemName.add(ti.getTaskName());
+            toDoListTaskItemDescription.add(ti.getTaskName());
+            toDoListTaskItemStatus.add(ti.getStatus());
         }
         obj.put("Task Item Names", toDoListTaskItemName);
-        JSONArray toDoListTaskItemDescription = new JSONArray();
-        for (TaskItem ti : toDoList.getToDoList()) {
-            toDoListTaskItemDescription.add(ti.getTaskName());
-        }
-        obj.put("Task Item Names", toDoListTaskItemDescription);
+        obj.put("Task Item Descriptions", toDoListTaskItemDescription);
+        obj.put("Task Item Statuses", toDoListTaskItemStatus);
 
 
-        obj.put("num", new Integer(100));
-        obj.put("balance", new Double(1000.21));
-        obj.put("is_vip", new Boolean(true));
+        obj.put("numTasks", toDoList.getToDoListSize());
+        obj.put("numCompleted", toDoList.getNumberOfTasksCompleted());
+        obj.put("numInProgress", toDoList.getNumberOfTasksInProgress());
+        obj.put("numNotStarted", toDoList.getNumberOfTasksNotStarted());
 
         write(obj.toJSONString());
         close();
