@@ -3,14 +3,11 @@ package ui;
 import model.TaskItem;
 import model.ToDoList;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class ToDoApp {
     //fields
     private Scanner input;
-    private final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     private ToDoList toDoList;
     private TaskItem taskItem;
     private String taskName;
@@ -19,6 +16,7 @@ public class ToDoApp {
     // EFFECTS: runs the teller application
     public ToDoApp() {
         runList();
+        newStatus = "";
     }
 
     // MODIFIES: this
@@ -29,9 +27,8 @@ public class ToDoApp {
         init();
         while (runStatus) {
             displayMenu();
-            command = input.next();
+            command = input.nextLine();
             command = command.toLowerCase();
-
             if (command.equals("q")) {
                 runStatus = false;
             } else {
@@ -63,7 +60,7 @@ public class ToDoApp {
                 break;
 //                TODO
             case "6":
-                this.changeNameOrDescriptionInit();
+                this.changeNameOrDescription();
                 break;
 //            case "7":
 //            change priority, length of tasks
@@ -75,25 +72,47 @@ public class ToDoApp {
         }
     }
 
-    private void changeNameOrDescriptionInit() {
+    private void changeNameOrDescription() {
         if (toDoList.getToDoListSize() == 0) {
             noTasksInList();
         } else {
             System.out.print("Enter '1' to change task name or '2' to change task description\n");
-            String changeTaskInput = input.next();
-            if (changeTaskInput.equals("1")) {
-                changeTaskName();
-            } else if (changeTaskInput.equals("2")) {
-                changeTaskDescription();
-            } else {
-                System.out.print("Not a valid selection. Please try again\n");
+            String numInput = input.next();
+            switch (numInput) {
+                case "1":
+                    changeTaskName();
+                    break;
+                case "2":
+                    changeTaskDescription();
+                    break;
+                default:
+                    System.out.print("Not a Valid Selection\n");
+                    break;
             }
+            // TODO: The above breaks things: Exception in thread "main" java.lang.NullPointerException
+//            if (changeTaskInput.equals("1")) {
+//                changeTaskName();
+//            } else if (changeTaskInput.equals("2")) {
+//                changeTaskDescription();
+//            } else {
+//                System.out.print("Not a valid selection. Please try again\n");
+//            }
         }
     }
 
     private void changeTaskName() {
 //        TODO: potentially combine the match string code (which the remove and change taskStatus) also uses
-        System.out.print("");
+        if (displayTextExactMatch()) {
+            Scanner input2 = new Scanner(System.in);
+            String newTaskName = input2.nextLine();
+            int pos = toDoList.taskPosition(newTaskName);
+            if (pos == -1) {
+                System.out.print("No Matching Task. Returning to the Welcome Screen... \n");
+            } else {
+                toDoList.getTaskItem(pos - 1).changeTaskName(newTaskName);
+                System.out.print("Task Name Changed. Returning to the Welcome Screen... \n");
+            }
+        }
         // Prompt for input - what is the name of the task you want to change?
         // Change task method
         // if there are duplicates - ask if you want to change the first, second or third task...
@@ -119,21 +138,37 @@ public class ToDoApp {
         }
     }
 
+    // MODIFIES: taskName
+    // EFFECTS: Generates new taskName combined with spaces
+    private String appendTaskName() {
+        taskItem = new TaskItem();
+        String firstWordOfTaskName = input.next();
+        String restOfTaskName = input.nextLine();
+        String taskName = firstWordOfTaskName + restOfTaskName;
+        return taskName;
+    }
+
+    private String appendDescription() {
+        String firstWordOfDescription = input.next();
+        String restOfDescription = input.nextLine();
+        String description = firstWordOfDescription + restOfDescription;
+        return description;
+    }
+
     // EFFECTS: Adds a task
     private void addTask() {
         System.out.print("Enter Task name: ");
-        taskItem = new TaskItem();
-        String taskName = input.next();
+        String taskName = appendTaskName();
         taskItem.changeTaskName(taskName);
-        System.out.print("Enter description of the task: ");;
-        /* Add code for optional input */
-        String description = input.next();
+        System.out.print("Enter description of the task: ");
+        String description = appendDescription();
         taskItem.changeDescription(description);
+        /* Add code for optional input */
         for (TaskItem ti : toDoList.getToDoList()) {
             if (ti.getTaskName().equals(taskItem.getTaskName())) {
                 System.out.print(
                         "Note - You have a duplicate task in your list. Deleting or changing the status of one task "
-                                + "will affect all with the same name. \n");
+                                + "will affect all tasks with the same name. \n");
                 break;
             }
         }
@@ -163,14 +198,11 @@ public class ToDoApp {
             noTasksInList();
             return false;
         } else {
-
             System.out.print(
-                    "Displayed below are the current tasks. Enter the task name to remove it. \n");
+                    "Displayed below are the current tasks: \n");
             displayToDoList();
-            System.out.print(
-                    "Your entry must match the task name exactly; any typo may result in an error. ");
-            System.out.print("Enter the task name: \n");
-            taskName = input.next();
+            System.out.print("Enter the name of the task you wish to modify: ");
+            taskName = appendTaskName();
             return true;
         }
     }
@@ -178,7 +210,6 @@ public class ToDoApp {
     private void noTasksInList() {
         System.out.print("There are no tasks in the current list. \n");
     }
-
 
     // EFFECTS: Removes a Task
     private void removeTask() {
@@ -199,24 +230,32 @@ public class ToDoApp {
             int pos = toDoList.taskPosition(taskName);
             if (pos == -1) {
                 System.out.print("No Matching Task \n");
+                return;
             } else {
                 System.out.print("Enter '1' for Not Started, '2' for In Progress, and '3' for Completed. \n");
                 newStatus = input.next();
             }
-            switch (newStatus) {
-                case "2":
-                    toDoList.taskInProgressInToDo(taskName);
-                    break;
-                case "3":
-                    toDoList.taskCompletedInToDo(taskName);
-                    break;
-                case "1":
-                    toDoList.taskNotStartedToDo(taskName);
-                    break;
-                default:
-                    System.out.print("Not a Valid Status\n");
-                    break;
-            }
+            printTaskStatus();
+        }
+    }
+
+    private void printTaskStatus() {
+        switch (newStatus) {
+            case "2":
+                toDoList.taskInProgressInToDo(taskName);
+                System.out.print("Task Status Modified. \n");
+                break;
+            case "3":
+                toDoList.taskCompletedInToDo(taskName);
+                System.out.print("Task Status Modified. \n");
+                break;
+            case "1":
+                toDoList.taskNotStartedToDo(taskName);
+                System.out.print("Task Status Modified. \n");
+                break;
+            default:
+                System.out.print("Not a Valid Status. Returning to home menu...\n");
+                break;
         }
     }
 
