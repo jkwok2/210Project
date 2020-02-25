@@ -2,11 +2,16 @@ package ui;
 
 import model.TaskItem;
 import model.ToDoList;
+import persistence.Writer;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.Scanner;
 
 public class ToDoApp {
     //fields
+    private static final String TODO_FILE = "./data/todo_data.json";
     private Scanner input;
     private ToDoList toDoList;
     private TaskItem taskItem;
@@ -17,6 +22,17 @@ public class ToDoApp {
     public ToDoApp() {
         runList();
         newStatus = "";
+    }
+
+    public void saveData(ToDoList td) {
+        try {
+            Writer savedFile = new Writer(new File(TODO_FILE));
+            savedFile.saveData(td);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     // MODIFIES: this
@@ -66,6 +82,9 @@ public class ToDoApp {
 //            change priority, length of tasks
 //            case "8":
 //            instruction manual
+            case "0":
+                saveData(toDoList);
+                break;
             default:
                 System.out.println("Selection not valid...");
                 break;
@@ -284,6 +303,7 @@ public class ToDoApp {
         System.out.println("- '4' to get task status stats");
         System.out.println("- '5' to change task status");
         System.out.println("- '6' to change a task name or description");
+        System.out.println("- '0' to save items");
         System.out.println("- 'q' to quit");
     }
 }
