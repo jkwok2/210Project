@@ -103,13 +103,13 @@ public class ToDoApp {
     private void changeTaskName() {
 //        TODO: potentially combine the match string code (which the remove and change taskStatus) also uses
         if (displayTextExactMatch()) {
-            Scanner input2 = new Scanner(System.in);
-            String newTaskName = input2.nextLine();
-            int pos = toDoList.taskPosition(newTaskName);
+            int pos = toDoList.taskPosition(taskName);
             if (pos == -1) {
                 System.out.print("No Matching Task. Returning to the Welcome Screen... \n");
             } else {
-                toDoList.getTaskItem(pos - 1).changeTaskName(newTaskName);
+                System.out.println("Enter a new name...");
+                taskName = input.nextLine();
+                toDoList.getTaskItem(pos).changeTaskName(taskName);
                 System.out.print("Task Name Changed. Returning to the Welcome Screen... \n");
             }
         }
