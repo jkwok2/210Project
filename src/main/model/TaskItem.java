@@ -9,6 +9,12 @@ public class TaskItem {
         this.taskName = "";
         this.description = "";
         status = "Not Started";
+    }
+
+    public TaskItem(String name, String description, String status) {
+        taskName = name;
+        this.description = description;
+        this.status = status;
 
     }
 

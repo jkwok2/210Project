@@ -2,12 +2,17 @@ package ui;
 
 import model.TaskItem;
 import model.ToDoList;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
-import persistence.Reader;
-import persistence.Writer;
+
+import persistence.Editor;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import static persistence.Editor.unpackData;
+
 // Referenced: https://mkyong.com/java/json-simple-example-read-and-write-json/
 
 
@@ -28,11 +33,9 @@ public class ToDoApp {
 
     public void saveData(ToDoList td) {
         try {
-            Writer savedFile = new Writer(new File(TODO_FILE));
+            Editor savedFile = new Editor(new File(TODO_FILE));
             savedFile.saveData(td);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
@@ -40,8 +43,33 @@ public class ToDoApp {
     public void loadToDoList() {
         try {
             FileReader reader = new FileReader(new File(TODO_FILE));
-        } catch (FileNotFoundException e) {
+            JSONObject jsonObject = unpackData(reader);
+            ArrayList<TaskItem> listOfTaskItems = new ArrayList<>();
+            ArrayList<String> taskItemNames = (ArrayList<String>) jsonObject.get("Task Item Names");
+            ArrayList<String> taskItemDescription = (ArrayList<String>) jsonObject.get("Task Item Names");
+            ArrayList<String> taskItemStatus = (ArrayList<String>) jsonObject.get("Task Item Names");
+            long numTasks = (Long) jsonObject.get("numTasks");
+            long numCompleted = (Long) jsonObject.get("numCompleted");
+            long numInProgress = (Long) jsonObject.get("numInProgress");
+            long numNotStarted = (Long) jsonObject.get("numNotStarted");
+            addParam(listOfTaskItems, taskItemNames, taskItemDescription, taskItemStatus);
+            toDoList = new ToDoList(listOfTaskItems, numTasks, numNotStarted, numCompleted,numInProgress);
+        } catch (ParseException | IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    // tin = taskItemName
+    // tid = taskItemDescription
+    // tis = taskItemStatus
+    // lti = listOfTaskNames
+    // Modified for checkstyle guidelines
+    private void addParam(ArrayList<TaskItem> lti, ArrayList<String> tin,ArrayList<String> tid,ArrayList<String> tis) {
+        for (int i = 0; i < tin.size(); i++) {
+            String taskName = tin.get(i);
+            String taskDescription = tid.get(i);
+            String taskStatus = tis.get(i);
+            lti.add(new TaskItem(taskName,taskDescription,taskStatus));
         }
     }
 
@@ -71,30 +99,20 @@ public class ToDoApp {
         switch (command) {
             case "1":
                 this.addTask();
-                break;
             case "2":
                 this.displayToDoList();
-                break;
             case "3":
                 this.removeTask();
-                break;
             case "4":
                 this.displayStatusStats();
-                break;
             case "5":
                 this.changeTaskStatus();
-                break;
-//                TODO
             case "6":
                 this.changeNameOrDescription();
-                break;
-//            case "7":
-//            change priority, length of tasks
-//            case "8":
-//            instruction manual
             case "0":
                 saveData(toDoList);
-                break;
+            case "00":
+                loadToDoList();
             default:
                 System.out.println("Selection not valid...");
                 break;
@@ -118,14 +136,6 @@ public class ToDoApp {
                     System.out.print("Not a Valid Selection\n");
                     break;
             }
-            // TODO: The above breaks things: Exception in thread "main" java.lang.NullPointerException
-//            if (changeTaskInput.equals("1")) {
-//                changeTaskName();
-//            } else if (changeTaskInput.equals("2")) {
-//                changeTaskDescription();
-//            } else {
-//                System.out.print("Not a valid selection. Please try again\n");
-//            }
         }
     }
 
@@ -313,7 +323,8 @@ public class ToDoApp {
         System.out.println("- '4' to get task status stats");
         System.out.println("- '5' to change task status");
         System.out.println("- '6' to change a task name or description");
-        System.out.println("- '0' to save items");
+        System.out.println("- '0' to save items to file");
+        System.out.println("- '00' to load items from file");
         System.out.println("- 'q' to quit");
     }
 }

@@ -19,12 +19,12 @@ public class ToDoList {
     }
 
     public ToDoList(
-            ArrayList<TaskItem> toDoList, int numTasks, int numNotStarted, int numCompleted, int numInProgress) {
+            ArrayList<TaskItem> toDoList, Long numTasks, Long numNotStarted, Long numCompleted, Long numInProgress) {
         this.toDoList = toDoList;
-        this.numTasks = numTasks;
-        this.numNotStarted = numNotStarted;
-        this.numCompleted = numCompleted;
-        this.numInProgress = numInProgress;
+        this.numTasks = numTasks.intValue();
+        this.numNotStarted = numNotStarted.intValue();
+        this.numCompleted = numCompleted.intValue();
+        this.numInProgress = numInProgress.intValue();
     }
 
     public void addTask(TaskItem ti) {
