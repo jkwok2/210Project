@@ -26,13 +26,11 @@ public class EditorTests {
     TaskItem taskItem4;
 
     @BeforeEach
-    void runBefore() throws FileNotFoundException, UnsupportedEncodingException {
+    void runBefore() {
         try {
             editor = new Editor(new File(TODO_FILE));
             todoList1 = new ToDoList();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         taskItem1 = new TaskItem();
