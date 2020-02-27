@@ -34,7 +34,7 @@ public class Editor {
         printWriter.close();
     }
 
-    //
+    // EFFECTS: Saves all TodoList Data to file
     public void saveData(ToDoList toDoList) {
         JSONObject obj = new JSONObject();
         JSONArray toDoListTaskItemName = new JSONArray();
@@ -58,7 +58,7 @@ public class Editor {
         close();
     }
 
-    //
+    // EFFECTS: constructs a parser that will write data to file
     public static JSONObject unpackData(FileReader reader) throws IOException, ParseException {
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
