@@ -61,6 +61,7 @@ public class Editor {
     //
     public static JSONObject unpackData(FileReader reader) throws IOException, ParseException {
         JSONParser parser = new JSONParser();
-        return (JSONObject) parser.parse(reader);
+        JSONObject jsonObject = (JSONObject) parser.parse(reader);
+        return jsonObject;
     }
 }

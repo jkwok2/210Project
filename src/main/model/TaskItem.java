@@ -15,7 +15,6 @@ public class TaskItem {
         taskName = name;
         this.description = description;
         this.status = status;
-
     }
 
     // EFFECTS: Gets the name of a TaskItem

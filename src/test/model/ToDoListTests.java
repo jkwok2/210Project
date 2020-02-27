@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 class ToDoListTests {
 
     ToDoList todoList1;
@@ -13,9 +15,11 @@ class ToDoListTests {
     TaskItem taskItem2;
     TaskItem taskItem3;
     TaskItem taskItem4;
+    ToDoList todoList4;
 
     @BeforeEach
     void runBefore() {
+        todoList4 = new ToDoList(new ArrayList<>(), (long) 0, (long) 0, (long) 0, (long) 0);
         todoList1 = new ToDoList();
         taskItem1 = new TaskItem();
         taskItem1.changeTaskName("Task 1");

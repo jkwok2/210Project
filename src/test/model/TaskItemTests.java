@@ -8,10 +8,12 @@ import org.junit.jupiter.api.Test;
 public class TaskItemTests {
 
     TaskItem taskItem1;
+    TaskItem taskItem2;
 
     @BeforeEach
     void runBefore() {
         taskItem1 = new TaskItem();
+        taskItem2 = new TaskItem("Test Name", "Test Description", "Not Completed");
     }
 
     @Test
