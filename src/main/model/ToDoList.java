@@ -42,7 +42,7 @@ public class ToDoList {
                 ti.changeTaskStatusToCompleted();
                 if (status.equals("Not Started")) {
                     this.numNotStarted--;
-                } else if (status.equals("In Progress")) {
+                } else {
                     this.numInProgress--;
                 }
                 this.numCompleted++;
@@ -60,7 +60,7 @@ public class ToDoList {
                 ti.changeTaskStatusToInProgress();
                 if (status.equals("Not Started")) {
                     this.numNotStarted--;
-                } else if (status.equals("Completed")) {
+                } else {
                     this.numCompleted--;
                 }
                 this.numInProgress++;
@@ -78,7 +78,7 @@ public class ToDoList {
                 ti.changeTaskStatusToNotStarted();
                 if (status.equals("In Progress")) {
                     this.numInProgress--;
-                } else if (status.equals("Completed")) {
+                } else {
                     this.numCompleted--;
                 }
                 this.numNotStarted++;
