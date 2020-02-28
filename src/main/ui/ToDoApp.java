@@ -122,7 +122,7 @@ public class ToDoApp {
     }
 
     private void addRemoveOrDisplayTask() {
-        System.out.print("Enter 1 to add task, 2 to display the To-Do List, or 3 to remove a task.");
+        System.out.print("Enter 1 to add task, 2 to display the To-Do List, or 3 to remove a task.\n");
         String numInput = input.next();
         switch (numInput) {
             case "1":

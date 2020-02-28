@@ -61,7 +61,6 @@ public class Editor {
     // EFFECTS: constructs a parser that will write data to file
     public static JSONObject unpackData(FileReader reader) throws IOException, ParseException {
         JSONParser parser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) parser.parse(reader);
-        return jsonObject;
+        return (JSONObject) parser.parse(reader);
     }
 }
