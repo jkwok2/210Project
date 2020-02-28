@@ -98,13 +98,7 @@ public class ToDoApp {
     private void processCommand(String command) {
         switch (command) {
             case "1":
-                this.addTask();
-                break;
-            case "2":
-                this.displayToDoList();
-                break;
-            case "3":
-                this.removeTask();
+                this.addRemoveOrDisplayTask();
                 break;
             case "4":
                 this.displayStatusStats();
@@ -123,6 +117,22 @@ public class ToDoApp {
                 break;
             default:
                 System.out.println("Selection not valid...");
+                break;
+        }
+    }
+
+    private void addRemoveOrDisplayTask() {
+        System.out.print("Enter 1 to add task, 2 to display the To-Do List, or 3 to remove a task.");
+        String numInput = input.next();
+        switch (numInput) {
+            case "1":
+                this.addTask();
+                break;
+            case "2":
+                this.displayToDoList();
+                break;
+            case "3":
+                this.removeTask();
                 break;
         }
     }
@@ -200,15 +210,13 @@ public class ToDoApp {
         taskItem = new TaskItem();
         String firstWordOfTaskName = input.next();
         String restOfTaskName = input.nextLine();
-        String taskName = firstWordOfTaskName + restOfTaskName;
-        return taskName;
+        return firstWordOfTaskName + restOfTaskName;
     }
 
     private String appendDescription() {
         String firstWordOfDescription = input.next();
         String restOfDescription = input.nextLine();
-        String description = firstWordOfDescription + restOfDescription;
-        return description;
+        return firstWordOfDescription + restOfDescription;
     }
 
     // EFFECTS: Adds a task
@@ -325,9 +333,7 @@ public class ToDoApp {
     // EFFECTS: displays menu of options to user
     private void displayMenu() {
         System.out.println("Welcome! Enter:");
-        System.out.println("- '1' to add a task");
-        System.out.println("- '2' to view tasks");
-        System.out.println("- '3' to delete a task");
+        System.out.println("- '1' to add, view, or delete a task");
         System.out.println("- '4' to get task status stats");
         System.out.println("- '5' to change task status");
         System.out.println("- '6' to change a task name or description");
