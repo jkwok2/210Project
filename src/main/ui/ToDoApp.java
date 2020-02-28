@@ -99,20 +99,28 @@ public class ToDoApp {
         switch (command) {
             case "1":
                 this.addTask();
+                break;
             case "2":
                 this.displayToDoList();
+                break;
             case "3":
                 this.removeTask();
+                break;
             case "4":
                 this.displayStatusStats();
+                break;
             case "5":
                 this.changeTaskStatus();
+                break;
             case "6":
                 this.changeNameOrDescription();
+                break;
             case "0":
                 saveData(toDoList);
+                break;
             case "00":
                 loadToDoList();
+                break;
             default:
                 System.out.println("Selection not valid...");
                 break;
