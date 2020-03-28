@@ -23,3 +23,6 @@ versa. I hope to be able to produce that data and assist users that way.
 4. As a user, I want to display the number of tasks Not Started, In Progress, and Completed.
 5. As a user, I want an option to save all entered tasks to a file.
 6. As a user, I want to retrieve all saved tasks from a file. 
+
+## Instructions for Grader
+1. 

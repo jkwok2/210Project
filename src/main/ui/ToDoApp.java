@@ -227,7 +227,6 @@ public class ToDoApp {
         System.out.print("Enter description of the task: ");
         String description = appendDescription();
         taskItem.changeDescription(description);
-        /* Add code for optional input */
         for (TaskItem ti : toDoList.getToDoList()) {
             if (ti.getTaskName().equals(taskItem.getTaskName())) {
                 System.out.print(
