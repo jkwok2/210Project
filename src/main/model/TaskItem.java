@@ -6,8 +6,8 @@ public class TaskItem {
     private String status;
 
     public TaskItem() {
-        this.taskName = "";
-        this.description = "";
+        this.taskName = "Sample Name";
+        this.description = "Sample Description";
         status = "Not Started";
     }
 

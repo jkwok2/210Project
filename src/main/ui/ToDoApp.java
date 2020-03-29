@@ -53,7 +53,7 @@ public class ToDoApp {
             long numInProgress = (Long) jsonObject.get("numInProgress");
             long numNotStarted = (Long) jsonObject.get("numNotStarted");
             addParam(listOfTaskItems, taskItemNames, taskItemDescription, taskItemStatus);
-            toDoList = new ToDoList(listOfTaskItems, numTasks, numNotStarted, numCompleted,numInProgress);
+            toDoList = new ToDoList(listOfTaskItems, numTasks, numNotStarted, numCompleted, numInProgress);
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
