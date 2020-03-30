@@ -6,6 +6,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import persistence.Editor;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -53,70 +57,13 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
         tableModel = new DefaultTableModel(columnNames, 0);
         listPanel = new JTable(tableModel);
 
-
         // Displays instructions to change task name or description.
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setToolTipText("Double-click to change task name/description");
         listPanel.getColumnModel().getColumn(0).setCellRenderer(renderer);
         listPanel.getColumnModel().getColumn(1).setCellRenderer(renderer);
 
-
-//        tableModel.addPror(new ActionListener() {
-//
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//
-//            }
-//        });
-//
-        tableModel.addTableModelListener(e -> {
-            int col = e.getColumn();
-            int row = e.getFirstRow();
-            if (col == 0) {
-                String text = (String) listPanel.getModel().getValueAt(row, col);
-                TaskItem ti = toDoList.getTaskItem(e.getFirstRow());
-                ti.changeTaskName(text);
-            } else if (col == 1) {
-                String text = (String) listPanel.getModel().getValueAt(row, col);
-                String taskName = (String) listPanel.getModel().getValueAt(row, 0);
-                int toDoListRow = toDoList.taskPosition(taskName);
-                TaskItem ti = toDoList.getTaskItem(toDoListRow);
-                ti.changeDescription(text);
-            } else if (col == 2) {
-                String text = (String) listPanel.getModel().getValueAt(row, col);
-                String taskName = (String) listPanel.getModel().getValueAt(row, 0);
-                int toDoListRow = toDoList.taskPosition(taskName);
-                TaskItem ti = toDoList.getTaskItem(toDoListRow);
-                String previousStatus = ti.getStatus();
-                ti.changeTaskStatus(text);
-                String newStatus = ti.getStatus();
-                switch (previousStatus) {
-                    case "Not Started":
-                        toDoList.subNumNotStarted();
-                        break;
-                    case "In Progress":
-                        toDoList.subNumInProgress();
-                        break;
-                    case "Completed":
-                        toDoList.subNumCompleted();
-                        break;
-                }
-                switch (newStatus) {
-                    case "Not Started":
-                        toDoList.addNumNotStarted();
-                        break;
-                    case "In Progress":
-                        toDoList.addNumInProgress();
-                        break;
-                    case "Completed":
-                        toDoList.addNumCompleted();
-                        break;
-                }
-                counter.setText("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + " / "
-                        + "Tasks In Progress: " + toDoList.getNumberOfTasksInProgress() + " / "
-                        + "Tasks Completed: " + toDoList.getNumberOfTasksCompleted());
-            }
-        });
+        tableModelListener();
 
         // Sets up the status column to display a dropdown box.
         setUpStatusDropdown(listPanel.getColumnModel().getColumn(2));
@@ -132,6 +79,63 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
 
         // Display Window
         this.setVisible(true);
+    }
+
+    private void tableModelListener() {
+        tableModel.addTableModelListener(e -> {
+            int col = e.getColumn();
+            int row = e.getFirstRow();
+            if (col == 0) {
+                String text = (String) listPanel.getModel().getValueAt(row, col);
+                TaskItem ti = toDoList.getTaskItem(e.getFirstRow());
+                ti.changeTaskName(text);
+            } else if (col == 1) {
+                String text = (String) listPanel.getModel().getValueAt(row, col);
+                String taskName = (String) listPanel.getModel().getValueAt(row, 0);
+                int toDoListRow = toDoList.taskPosition(taskName);
+                TaskItem ti = toDoList.getTaskItem(toDoListRow);
+                ti.changeDescription(text);
+            } else if (col == 2) {
+                methodForTableModelListenerIfStatusChanged(col, row);
+                resetMenuText();
+            }
+        });
+    }
+
+    private void methodForTableModelListenerIfStatusChanged(int col, int row) {
+        String text = (String) listPanel.getModel().getValueAt(row, col);
+        String taskName = (String) listPanel.getModel().getValueAt(row, 0);
+        int toDoListRow = toDoList.taskPosition(taskName);
+        TaskItem ti = toDoList.getTaskItem(toDoListRow);
+        String previousStatus = ti.getStatus();
+        ti.changeTaskStatus(text);
+        String newStatus = ti.getStatus();
+        tableModelListenerStatusChangedSwitch(previousStatus, newStatus);
+    }
+
+    private void tableModelListenerStatusChangedSwitch(String previousStatus, String newStatus) {
+        switch (previousStatus) {
+            case "Not Started":
+                toDoList.subNumNotStarted();
+                break;
+            case "In Progress":
+                toDoList.subNumInProgress();
+                break;
+            case "Completed":
+                toDoList.subNumCompleted();
+                break;
+        }
+        switch (newStatus) {
+            case "Not Started":
+                toDoList.addNumNotStarted();
+                break;
+            case "In Progress":
+                toDoList.addNumInProgress();
+                break;
+            case "Completed":
+                toDoList.addNumCompleted();
+                break;
+        }
     }
 
     public void saveData(ToDoList td) {
@@ -162,12 +166,13 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
         }
     }
 
-    private void addParam(ArrayList<TaskItem> lti, ArrayList<String> tin,ArrayList<String> tid,ArrayList<String> tis) {
+    private void addParam(
+            ArrayList<TaskItem> lti, ArrayList<String> tin, ArrayList<String> tid, ArrayList<String> tis) {
         for (int i = 0; i < tin.size(); i++) {
             String taskName = tin.get(i);
             String taskDescription = tid.get(i);
             String taskStatus = tis.get(i);
-            lti.add(new TaskItem(taskName,taskDescription,taskStatus));
+            lti.add(new TaskItem(taskName, taskDescription, taskStatus));
         }
     }
 
@@ -181,7 +186,6 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
         comboBox.addItem("In Progress");
         comboBox.addItem("Completed");
         statusColumn.setCellEditor(new DefaultCellEditor(comboBox));
-
 
 
         //Displays instructions for changing status.
@@ -200,23 +204,23 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
         // Adds panel with layout
         JPanel topPane = new JPanel();
         topPane.setLayout(new BoxLayout(topPane, BoxLayout.Y_AXIS));
-        // Doesn't work
-//        topPane.setAlignmentX(LEFT_ALIGNMENT);
 
-        //
         JLabel instructions = new JLabel();
         instructions.setText(topTextPane());
 
         counter = new JLabel();
-        counter.setText("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + " / "
-                + "Tasks In Progress: " + toDoList.getNumberOfTasksInProgress() + " / "
-                + "Tasks Completed: " + toDoList.getNumberOfTasksCompleted());
-        // Doesn't Work
-//        counter.setHorizontalAlignment(JLabel.LEFT);
-
-        // Creates Dropdown menu on top with options
+        resetMenuText();
         JComboBox<String> mainMenu = new JComboBox<>(menuItems);
         mainMenu.setSelectedIndex(0);
+        mainMenuActionListener(mainMenu);
+
+        topPane.add(mainMenu);
+        topPane.add(instructions);
+        topPane.add(counter);
+        return topPane;
+    }
+
+    private void mainMenuActionListener(JComboBox<String> mainMenu) {
         mainMenu.addActionListener(e -> {
             if (mainMenu.getSelectedIndex() == 1) {
                 saveData(toDoList);
@@ -232,16 +236,15 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
                                     toDoList.getTaskItem(c).getStatus()});
                     c++;
                 }
-                counter.setText("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + " / "
-                        + "Tasks In Progress: " + toDoList.getNumberOfTasksInProgress() + " / "
-                        + "Tasks Completed: " + toDoList.getNumberOfTasksCompleted());
+                resetMenuText();
             }
         });
+    }
 
-        topPane.add(mainMenu);
-        topPane.add(instructions);
-        topPane.add(counter);
-        return topPane;
+    private void resetMenuText() {
+        counter.setText("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + " / "
+                + "Tasks In Progress: " + toDoList.getNumberOfTasksInProgress() + " / "
+                + "Tasks Completed: " + toDoList.getNumberOfTasksCompleted());
     }
 
     private JPanel getTaskList() {
@@ -260,9 +263,7 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
                 removeTask();
                 tableModel.removeRow(listPanel.getSelectedRow());
             }
-            counter.setText("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + " / "
-                    + "Tasks In Progress: " + toDoList.getNumberOfTasksInProgress() + " / "
-                    + "Tasks Completed: " + toDoList.getNumberOfTasksCompleted());
+            resetMenuText();
         });
 
         addTask.addActionListener(this);
@@ -280,9 +281,7 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
             addTask(taskName);
             taskName.setText("");
             addTask.setEnabled(false);
-            counter.setText("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + " / "
-                    + "Tasks In Progress: " + toDoList.getNumberOfTasksInProgress() + " / "
-                    + "Tasks Completed: " + toDoList.getNumberOfTasksCompleted());
+            resetMenuText();
         });
 
         taskName.getDocument().addDocumentListener(new DocumentListener() {
@@ -335,7 +334,21 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Toolkit.getDefaultToolkit().beep();
+        // https://www.soundjay.com/beep-sounds-1.html
+        String soundName = "./data/beep-01a.wav";
+        playSound(soundName);
+    }
+
+    private void playSound(String soundName) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
+        }
     }
 
     @Override
