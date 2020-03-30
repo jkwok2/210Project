@@ -25,4 +25,16 @@ versa. I hope to be able to produce that data and assist users that way.
 6. As a user, I want to retrieve all saved tasks from a file. 
 
 ## Instructions for Grader
-1. 
+Every time a task is modified on the GUI, it is also modified in the ToDoList and TaskItem classes. This also how the 
+save and load functions of the ToDoList are implemented. 
+
+Add X to Y #1: Click 'Add Task' button to add new TaskItem (taken from the JTextArea) to add a task to the GUI and 
+create a new TaskItem and add it to the ToDoList Class in model.
+Add X to Y #2: Click 'Remove Task' button to remove selected TaskItem (taken from the JTable) to remove a task to the 
+GUI and create a new TaskItem and add it to the ToDoList Class in model.
+Other User Stories: The name, description, and status of a TaskItem is displayed on the GUI interface. The number
+of tasks not started, in progress, and completed are displayed in a JLabel at the top. This is updated every time a task
+is added or removed.
+Audiovisual Component: 'beep.wav' sound played when 'Add Task' button is clicked and task is added.
+Save state of application: Menu dropdown 'Save Data' under 'Options - Select Below'
+Load state of application: Menu dropdown 'Load Data' under 'Options - Select Below'
