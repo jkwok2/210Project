@@ -17,6 +17,12 @@ public class TaskItemTests {
     }
 
     @Test
+    public void testChangeTaskStatus() {
+        taskItem1.changeTaskStatus("In Progress");
+        assertEquals("In Progress", taskItem1.getStatus());
+    }
+
+    @Test
     public void testNotStarted() {
         taskItem1.changeTaskStatusToNotStarted();
         assertEquals("Not Started", taskItem1.getStatus());

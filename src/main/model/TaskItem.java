@@ -6,8 +6,8 @@ public class TaskItem {
     private String status;
 
     public TaskItem() {
-        this.taskName = "Sample Name";
-        this.description = "Sample Description";
+        this.taskName = "";
+        this.description = "";
         status = "Not Started";
     }
 
@@ -25,6 +25,10 @@ public class TaskItem {
     // EFFECTS: Gets the description of a TaskItem
     public void changeDescription(String taskDescription) {
         this.description = taskDescription;
+    }
+
+    public void changeTaskStatus(String taskStatus) {
+        this.status = taskStatus;
     }
 
     // MODIFIES: this

@@ -92,6 +92,13 @@ public class ToDoList {
     public ArrayList<TaskItem> removeTask(int pos) {
         TaskItem ti;
         ti = toDoList.get(pos);
+        if (ti.getStatus().equals("Not Started")) {
+            numNotStarted--;
+        } else if (ti.getStatus().equals("In Progress")) {
+            numInProgress--;
+        } else {
+            numCompleted--;
+        }
         toDoList.remove(ti);
         return toDoList;
     }
@@ -120,6 +127,30 @@ public class ToDoList {
             }
         }
         return -1;
+    }
+
+    public void subNumNotStarted() {
+        this.numNotStarted--;
+    }
+
+    public void addNumNotStarted() {
+        this.numNotStarted++;
+    }
+
+    public void subNumInProgress() {
+        this.numInProgress--;
+    }
+
+    public void addNumInProgress() {
+        this.numInProgress++;
+    }
+
+    public void subNumCompleted() {
+        this.numCompleted--;
+    }
+
+    public void addNumCompleted() {
+        this.numCompleted++;
     }
 
     public int getNumberOfTasksNotStarted() {

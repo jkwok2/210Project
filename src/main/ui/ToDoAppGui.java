@@ -2,22 +2,41 @@ package ui;
 
 import model.TaskItem;
 import model.ToDoList;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+import persistence.Editor;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.*;
+import java.util.ArrayList;
 
-public class ToDoAppGui extends JFrame implements ActionListener {
+import static persistence.Editor.unpackData;
+
+public class ToDoAppGui extends JFrame implements ActionListener, DocumentListener, TableModelListener,
+        PropertyChangeListener {
     //Fields
     private static final String TODO_FILE = "./data/todo_data.json";
     private ToDoList toDoList;
     private TaskItem taskItem;
     private JTable listPanel;
+    private DefaultTableModel tableModel;
+    private String taskName;
+    private JLabel counter;
 
     String[] menuItems = {"Options - Select Below", "Save Data", "Load Data"};
+    String[] columnNames = {"Name", "Description", "Status"};
 
     public ToDoAppGui() {
         // Creates Window
@@ -30,10 +49,10 @@ public class ToDoAppGui extends JFrame implements ActionListener {
         taskItem = new TaskItem();
         toDoList = new ToDoList();
 
-        // Make Table
-        String[] columnNames = {"Name", "Description", "Status"};
-        Object[][] toDoListStartData = {{"Sample Task", "Sample Description", "Not Started"}};
-        listPanel = new JTable(toDoListStartData, columnNames);
+        // Makes Table
+        tableModel = new DefaultTableModel(columnNames, 0);
+        listPanel = new JTable(tableModel);
+
 
         // Displays instructions to change task name or description.
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
@@ -41,11 +60,70 @@ public class ToDoAppGui extends JFrame implements ActionListener {
         listPanel.getColumnModel().getColumn(0).setCellRenderer(renderer);
         listPanel.getColumnModel().getColumn(1).setCellRenderer(renderer);
 
+
+//        tableModel.addPror(new ActionListener() {
+//
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//
+//            }
+//        });
+//
+        tableModel.addTableModelListener(e -> {
+            int col = e.getColumn();
+            int row = e.getFirstRow();
+            if (col == 0) {
+                String text = (String) listPanel.getModel().getValueAt(row, col);
+                TaskItem ti = toDoList.getTaskItem(e.getFirstRow());
+                ti.changeTaskName(text);
+            } else if (col == 1) {
+                String text = (String) listPanel.getModel().getValueAt(row, col);
+                String taskName = (String) listPanel.getModel().getValueAt(row, 0);
+                int toDoListRow = toDoList.taskPosition(taskName);
+                TaskItem ti = toDoList.getTaskItem(toDoListRow);
+                ti.changeDescription(text);
+            } else if (col == 2) {
+                String text = (String) listPanel.getModel().getValueAt(row, col);
+                String taskName = (String) listPanel.getModel().getValueAt(row, 0);
+                int toDoListRow = toDoList.taskPosition(taskName);
+                TaskItem ti = toDoList.getTaskItem(toDoListRow);
+                String previousStatus = ti.getStatus();
+                ti.changeTaskStatus(text);
+                String newStatus = ti.getStatus();
+                switch (previousStatus) {
+                    case "Not Started":
+                        toDoList.subNumNotStarted();
+                        break;
+                    case "In Progress":
+                        toDoList.subNumInProgress();
+                        break;
+                    case "Completed":
+                        toDoList.subNumCompleted();
+                        break;
+                }
+                switch (newStatus) {
+                    case "Not Started":
+                        toDoList.addNumNotStarted();
+                        break;
+                    case "In Progress":
+                        toDoList.addNumInProgress();
+                        break;
+                    case "Completed":
+                        toDoList.addNumCompleted();
+                        break;
+                }
+                counter.setText("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + " / "
+                        + "Tasks In Progress: " + toDoList.getNumberOfTasksInProgress() + " / "
+                        + "Tasks Completed: " + toDoList.getNumberOfTasksCompleted());
+            }
+        });
+
         // Sets up the status column to display a dropdown box.
         setUpStatusDropdown(listPanel.getColumnModel().getColumn(2));
 
         // Adds scroll bar on the right
         JScrollPane scrollPane = new JScrollPane(listPanel);
+
 
         // Adds dropdown menu, list, and panel
         this.add(getMenu(), BorderLayout.NORTH);
@@ -56,15 +134,55 @@ public class ToDoAppGui extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
+    public void saveData(ToDoList td) {
+        try {
+            Editor savedFile = new Editor(new File(TODO_FILE));
+            savedFile.saveData(td);
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadToDoList() {
+        try {
+            FileReader reader = new FileReader(new File(TODO_FILE));
+            JSONObject jsonObject = unpackData(reader);
+            ArrayList<TaskItem> listOfTaskItems = new ArrayList<>();
+            ArrayList<String> taskItemNames = (ArrayList<String>) jsonObject.get("Task Item Names");
+            ArrayList<String> taskItemDescription = (ArrayList<String>) jsonObject.get("Task Item Descriptions");
+            ArrayList<String> taskItemStatus = (ArrayList<String>) jsonObject.get("Task Item Statuses");
+            long numTasks = (Long) jsonObject.get("numTasks");
+            long numCompleted = (Long) jsonObject.get("numCompleted");
+            long numInProgress = (Long) jsonObject.get("numInProgress");
+            long numNotStarted = (Long) jsonObject.get("numNotStarted");
+            addParam(listOfTaskItems, taskItemNames, taskItemDescription, taskItemStatus);
+            toDoList = new ToDoList(listOfTaskItems, numTasks, numNotStarted, numCompleted, numInProgress);
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addParam(ArrayList<TaskItem> lti, ArrayList<String> tin,ArrayList<String> tid,ArrayList<String> tis) {
+        for (int i = 0; i < tin.size(); i++) {
+            String taskName = tin.get(i);
+            String taskDescription = tid.get(i);
+            String taskStatus = tis.get(i);
+            lti.add(new TaskItem(taskName,taskDescription,taskStatus));
+        }
+    }
+
     // Reference: TableRenderDemoProject from Oracle
     // https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html#TableRenderDemo
+    // Sets up task status as a dropdown menu.
     public void setUpStatusDropdown(TableColumn statusColumn) {
         //Set up the dropdown for task status
-        JComboBox comboBox = new JComboBox();
+        JComboBox<String> comboBox = new JComboBox<>();
         comboBox.addItem("Not Started");
         comboBox.addItem("In Progress");
         comboBox.addItem("Completed");
         statusColumn.setCellEditor(new DefaultCellEditor(comboBox));
+
+
 
         //Displays instructions for changing status.
         DefaultTableCellRenderer renderer =
@@ -74,8 +192,7 @@ public class ToDoAppGui extends JFrame implements ActionListener {
     }
 
     private String topTextPane() {
-        String header = "Welcome! Hover over elements to view instructions.";
-        return header;
+        return "Welcome to Jeff's ToDoList!";
     }
 
 
@@ -88,10 +205,9 @@ public class ToDoAppGui extends JFrame implements ActionListener {
 
         //
         JLabel instructions = new JLabel();
-        // TODO: Change this to be interactive
         instructions.setText(topTextPane());
 
-        JLabel counter = new JLabel();
+        counter = new JLabel();
         counter.setText("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + " / "
                 + "Tasks In Progress: " + toDoList.getNumberOfTasksInProgress() + " / "
                 + "Tasks Completed: " + toDoList.getNumberOfTasksCompleted());
@@ -99,9 +215,28 @@ public class ToDoAppGui extends JFrame implements ActionListener {
 //        counter.setHorizontalAlignment(JLabel.LEFT);
 
         // Creates Dropdown menu on top with options
-        JComboBox mainMenu = new JComboBox(menuItems);
+        JComboBox<String> mainMenu = new JComboBox<>(menuItems);
         mainMenu.setSelectedIndex(0);
-        mainMenu.addActionListener(this);
+        mainMenu.addActionListener(e -> {
+            if (mainMenu.getSelectedIndex() == 1) {
+                saveData(toDoList);
+            } else if (mainMenu.getSelectedIndex() == 2) {
+                loadToDoList();
+                tableModel.setRowCount(0);
+                int c = 0;
+                while (c < toDoList.getToDoListSize()) {
+                    tableModel.addRow(
+                            new String[]{
+                                    toDoList.getTaskItem(c).getTaskName(),
+                                    toDoList.getTaskItem(c).getDescription(),
+                                    toDoList.getTaskItem(c).getStatus()});
+                    c++;
+                }
+                counter.setText("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + " / "
+                        + "Tasks In Progress: " + toDoList.getNumberOfTasksInProgress() + " / "
+                        + "Tasks Completed: " + toDoList.getNumberOfTasksCompleted());
+            }
+        });
 
         topPane.add(mainMenu);
         topPane.add(instructions);
@@ -117,12 +252,17 @@ public class ToDoAppGui extends JFrame implements ActionListener {
         JButton addTask = new JButton("Add Task");
         JButton removeTask = new JButton("Remove Task");
         JTextField taskName = new JTextField();
+        addTask.setEnabled(false);
+        addTaskListener(addTask, taskName);
 
-        // When Add Task is clicked, input in text area is used to generate a new task.
-        addTask.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
+        removeTask.addActionListener(e -> {
+            if (listPanel.getSelectedRow() != -1) {
+                removeTask();
+                tableModel.removeRow(listPanel.getSelectedRow());
             }
+            counter.setText("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + " / "
+                    + "Tasks In Progress: " + toDoList.getNumberOfTasksInProgress() + " / "
+                    + "Tasks Completed: " + toDoList.getNumberOfTasksCompleted());
         });
 
         addTask.addActionListener(this);
@@ -133,11 +273,93 @@ public class ToDoAppGui extends JFrame implements ActionListener {
         return buttonPane;
     }
 
+    private void addTaskListener(JButton addTask, JTextField taskName) {
+        // When Add Task is clicked, input in text area is used to generate a new task.
+        addTask.addActionListener(e -> {
+            tableModel.addRow(new String[]{taskName.getText(), "", "Not Started"});
+            addTask(taskName);
+            taskName.setText("");
+            addTask.setEnabled(false);
+            counter.setText("Tasks Not Started: " + toDoList.getNumberOfTasksNotStarted() + " / "
+                    + "Tasks In Progress: " + toDoList.getNumberOfTasksInProgress() + " / "
+                    + "Tasks Completed: " + toDoList.getNumberOfTasksCompleted());
+        });
 
+        taskName.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                addTask.setEnabled(true);
+            }
 
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
+    }
+
+    // EFFECTS: Removes a Task
+    private void removeTask() {
+        if (displayTextExactMatch()) {
+            int pos = toDoList.taskPosition(taskName);
+            if (pos == -1) {
+                System.out.print("No Matching Task.\n");
+            } else {
+                toDoList.removeTask(pos);
+                System.out.print("Task Removed: " + taskName + "\n");
+            }
+        }
+    }
+
+    private boolean displayTextExactMatch() {
+        if (toDoList.getToDoListSize() == 0) {
+            return false;
+        } else {
+            int i = listPanel.getSelectedRow();
+            taskName = (String) listPanel.getValueAt(i, 0);
+            return true;
+        }
+    }
+
+    private void addTask(JTextField taskName) {
+        taskItem = new TaskItem();
+        taskItem.changeTaskName(taskName.getText());
+        toDoList.addTask(taskItem);
+        System.out.print("Task Added: " + taskName.getText() + "\n");
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Toolkit.getDefaultToolkit().beep();
+    }
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+
+    }
+
+    @Override
+    public void tableChanged(TableModelEvent e) {
+
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+
     }
 }
