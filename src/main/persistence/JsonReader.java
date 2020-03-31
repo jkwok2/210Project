@@ -2,7 +2,6 @@ package persistence;
 
 import model.TaskItem;
 import model.ToDoList;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -17,7 +16,7 @@ public class JsonReader {
     private FileReader reader;
 
     // EFFECTS: constructs a writer that will write data to file
-    public JsonReader(File file) throws FileNotFoundException, UnsupportedEncodingException {
+    public JsonReader(File file) throws FileNotFoundException {
         reader = new FileReader(file);
     }
 
