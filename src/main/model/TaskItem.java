@@ -17,6 +17,7 @@ public class TaskItem {
         this.status = status;
     }
 
+    // TODO: Create Exception if you are charging a non-empty field to an empty one
     // EFFECTS: Gets the name of a TaskItem
     public void changeTaskName(String taskName) {
         this.taskName = taskName;
@@ -27,9 +28,9 @@ public class TaskItem {
         this.description = taskDescription;
     }
 
-    // TODO: Create Exception
-    public void changeTaskStatus(String taskStatus) {
-        this.status = taskStatus;
+    // TODO: Create Exception anything that's Not Started, In Progress, or Completed
+    public void changeTaskStatus(String newStatus) {
+        this.status = newStatus;
     }
 
     // MODIFIES: this

@@ -38,11 +38,15 @@ public class JsonReaderTests {
         taskItem3 = new TaskItem();
         taskItem3.changeTaskName("Task 3");
         todoList1.addTask(taskItem3);
-        todoList1.taskInProgressInToDo("Task 3");
+        taskItem3.changeTaskStatus("In Progress");
+        todoList1.addNumInProgress();
+        todoList1.subNumNotStarted();
         taskItem4 = new TaskItem();
         taskItem4.changeTaskName("Task 4");
         todoList1.addTask(taskItem4);
-        todoList1.taskCompletedInToDo(taskItem4.getTaskName());
+        taskItem4.changeTaskStatus("Completed");
+        todoList1.addNumCompleted();
+        todoList1.subNumNotStarted();
         jsonReader = new JsonReader(new File(TODO_FILE));
         reader = new FileReader(new File(TODO_FILE));
         parser = new JSONParser();
