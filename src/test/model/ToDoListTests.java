@@ -42,11 +42,31 @@ class ToDoListTests {
     }
 
     @Test
-    void testRemoveTaskItem() {
+    void testRemoveTaskItemNotStarted() {
         todoList2.removeTask(2);
-        for (TaskItem taskItem : todoList2.toDoList) {
-            assertEquals(3, todoList2.toDoList.size());
-        }
+        assertEquals(3, todoList2.toDoList.size());
+        taskItem1.changeTaskStatus("In Progress");
+        todoList2.addNumInProgress();
+        todoList2.subNumNotStarted();
+        todoList2.removeTask(2);
+    }
+
+    @Test
+    void testRemoveTaskItemInProgress() {
+        taskItem1.changeTaskStatus("In Progress");
+        todoList2.addNumInProgress();
+        todoList2.subNumNotStarted();
+        todoList2.removeTask(0);
+        assertEquals(3, todoList2.toDoList.size());
+    }
+
+    @Test
+    void testRemoveTaskItemCompleted() {
+        taskItem1.changeTaskStatus("Completed");
+        todoList2.addNumInProgress();
+        todoList2.subNumNotStarted();
+        todoList2.removeTask(0);
+        assertEquals(3, todoList2.toDoList.size());
     }
 
     @Test
@@ -61,43 +81,6 @@ class ToDoListTests {
     void testConvertToDoListToString() {
         todoList2.convertToDoListToString();
     }
-
-//    @Test
-//    public void testTaskChanges() {
-//        todoList2.taskCompletedInToDo(taskItem3.getTaskName());
-////        Task 1, 2, 4 - Not Started; Task 3 - Completed
-//        assertEquals("Completed", taskItem3.getStatus());
-//        assertEquals(3, todoList2.numNotStarted);
-//        assertEquals(0, todoList2.numInProgress);
-//        assertEquals(1, todoList2.numCompleted);
-//        todoList2.taskInProgressInToDo(taskItem4.getTaskName());
-////        Task 1, 2, - Not Started; Task 3 - Completed; Task 4 - In Progress
-//        assertEquals(1, todoList2.numCompleted);
-//        assertEquals(1, todoList2.numInProgress);
-//        assertEquals(2, todoList2.numNotStarted);
-//        todoList2.taskInProgressInToDo(taskItem2.getTaskName());
-////        Task 1 - Not Started; Task 3 - Completed; Task 2, 4 - In Progress
-//        todoList2.taskCompletedInToDo(taskItem4.getTaskName());
-////        Task 1 - Not Started; Task 3, 4 - Completed; Task 2 - In Progress
-//        assertEquals(2, todoList2.numCompleted);
-//        assertEquals(1, todoList2.numInProgress);
-//        assertEquals(1, todoList2.numNotStarted);
-//        todoList2.taskNotStartedToDo(taskItem2.getTaskName());
-////        Task 1, 2 - Not Started; Task 3, 4 - Completed
-//        assertEquals(2, todoList2.numNotStarted);
-//        assertEquals(0, todoList2.numInProgress);
-//        assertEquals(2, todoList2.numCompleted);
-//        todoList2.taskNotStartedToDo(taskItem3.getTaskName());
-////        Task 1, 2, 3 - Not Started; Task 4 - Completed
-//        assertEquals(3, todoList2.numNotStarted);
-//        assertEquals(0, todoList2.numInProgress);
-//        assertEquals(1, todoList2.numCompleted);
-//        todoList2.taskInProgressInToDo(taskItem4.getTaskName());
-////        Task 1, 2, 3 - Not Started; Task 4 - In Progress
-//        assertEquals(3, todoList2.numNotStarted);
-//        assertEquals(1, todoList2.numInProgress);
-//        assertEquals(0, todoList2.numCompleted);
-//    }
 
     @Test
     public void testTaskInProgress() {
