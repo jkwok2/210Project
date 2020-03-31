@@ -27,6 +27,7 @@ public class TaskItem {
         this.description = taskDescription;
     }
 
+    // TODO: Create Exception
     public void changeTaskStatus(String taskStatus) {
         this.status = taskStatus;
     }

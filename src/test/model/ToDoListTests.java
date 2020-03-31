@@ -1,6 +1,7 @@
 package model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -115,9 +116,9 @@ class ToDoListTests {
 
     @Test
     public void testGetNumberOfTasksStarted() {
-        assertEquals(4,todoList2.getNumberOfTasksNotStarted());
+        assertEquals(4, todoList2.getNumberOfTasksNotStarted());
         todoList2.taskInProgressInToDo("Task 3");
-        assertEquals(3,todoList2.getNumberOfTasksNotStarted());
+        assertEquals(3, todoList2.getNumberOfTasksNotStarted());
         assertEquals(1, todoList2.getNumberOfTasksInProgress());
         assertEquals(0, todoList2.getNumberOfTasksCompleted());
     }
@@ -150,15 +151,15 @@ class ToDoListTests {
         todoList2.addNumNotStarted();
         todoList2.addNumInProgress();
         todoList2.addNumCompleted();
-        assertEquals(5,todoList2.getNumberOfTasksNotStarted());
-        assertEquals(1,todoList2.getNumberOfTasksInProgress());
-        assertEquals(1,todoList2.getNumberOfTasksCompleted());
+        assertEquals(5, todoList2.getNumberOfTasksNotStarted());
+        assertEquals(1, todoList2.getNumberOfTasksInProgress());
+        assertEquals(1, todoList2.getNumberOfTasksCompleted());
         todoList2.subNumNotStarted();
         todoList2.subNumInProgress();
         todoList2.subNumCompleted();
-        assertEquals(4,todoList2. getNumberOfTasksNotStarted());
-        assertEquals(0,todoList2.getNumberOfTasksInProgress());
-        assertEquals(0,todoList2.getNumberOfTasksCompleted());
+        assertEquals(4, todoList2.getNumberOfTasksNotStarted());
+        assertEquals(0, todoList2.getNumberOfTasksInProgress());
+        assertEquals(0, todoList2.getNumberOfTasksCompleted());
     }
 
 }

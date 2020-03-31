@@ -5,13 +5,12 @@ import model.ToDoList;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import persistence.Editor;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import static persistence.Editor.unpackData;
 
 // Referenced: https://mkyong.com/java/json-simple-example-read-and-write-json/
 
@@ -33,7 +32,7 @@ public class ToDoApp {
 
     public void saveData(ToDoList td) {
         try {
-            Editor savedFile = new Editor(new File(TODO_FILE));
+            JsonWriter savedFile = new JsonWriter(new File(TODO_FILE));
             savedFile.saveData(td);
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -42,22 +41,13 @@ public class ToDoApp {
 
     public void loadToDoList() {
         try {
-            FileReader reader = new FileReader(new File(TODO_FILE));
-            JSONObject jsonObject = unpackData(reader);
-            ArrayList<TaskItem> listOfTaskItems = new ArrayList<>();
-            ArrayList<String> taskItemNames = (ArrayList<String>) jsonObject.get("Task Item Names");
-            ArrayList<String> taskItemDescription = (ArrayList<String>) jsonObject.get("Task Item Names");
-            ArrayList<String> taskItemStatus = (ArrayList<String>) jsonObject.get("Task Item Names");
-            long numTasks = (Long) jsonObject.get("numTasks");
-            long numCompleted = (Long) jsonObject.get("numCompleted");
-            long numInProgress = (Long) jsonObject.get("numInProgress");
-            long numNotStarted = (Long) jsonObject.get("numNotStarted");
-            addParam(listOfTaskItems, taskItemNames, taskItemDescription, taskItemStatus);
-            toDoList = new ToDoList(listOfTaskItems, numTasks, numNotStarted, numCompleted, numInProgress);
+            JsonReader reader = new JsonReader(new File(TODO_FILE));
+            toDoList = reader.unpackData();
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
     }
+
 
     // tin = taskItemName
     // tid = taskItemDescription

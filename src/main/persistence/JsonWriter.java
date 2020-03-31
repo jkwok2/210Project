@@ -4,20 +4,18 @@ import model.TaskItem;
 import model.ToDoList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
-
-// This class represents the savable element of the todolist. It contains functions for saving the data by writing to
-// JSON and reading it from JSON
-public class Editor {
+public class JsonWriter {
 
     private PrintWriter printWriter;
 
     // EFFECTS: constructs a writer that will write data to file
-    public Editor(File file) throws FileNotFoundException, UnsupportedEncodingException {
+    public JsonWriter(File file) throws FileNotFoundException, UnsupportedEncodingException {
         printWriter = new PrintWriter(file, "UTF-8");
     }
 
@@ -56,11 +54,5 @@ public class Editor {
 
         write(obj.toJSONString());
         close();
-    }
-
-    // EFFECTS: constructs a parser that will write data to file
-    public static JSONObject unpackData(FileReader reader) throws IOException, ParseException {
-        JSONParser parser = new JSONParser();
-        return (JSONObject) parser.parse(reader);
     }
 }

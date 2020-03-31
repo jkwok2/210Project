@@ -43,3 +43,6 @@ Audiovisual Component: 'beep.wav' sound played when 'Add Task' button is clicked
 Save state of application: Menu dropdown 'Save Data' under 'Options - Select Below'
 
 Load state of application: Menu dropdown 'Load Data' under 'Options - Select Below'
+
+## Phase 4
+Task 2: I have chosen 

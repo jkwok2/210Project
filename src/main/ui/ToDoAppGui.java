@@ -4,12 +4,12 @@ import model.TaskItem;
 import model.ToDoList;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
-import persistence.Editor;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -24,9 +24,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
-import java.util.ArrayList;
 
-import static persistence.Editor.unpackData;
 
 public class ToDoAppGui extends JFrame implements ActionListener, DocumentListener, TableModelListener,
         PropertyChangeListener {
@@ -140,7 +138,7 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
 
     public void saveData(ToDoList td) {
         try {
-            Editor savedFile = new Editor(new File(TODO_FILE));
+            JsonWriter savedFile = new JsonWriter(new File(TODO_FILE));
             savedFile.saveData(td);
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -149,32 +147,13 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
 
     public void loadToDoList() {
         try {
-            FileReader reader = new FileReader(new File(TODO_FILE));
-            JSONObject jsonObject = unpackData(reader);
-            ArrayList<TaskItem> listOfTaskItems = new ArrayList<>();
-            ArrayList<String> taskItemNames = (ArrayList<String>) jsonObject.get("Task Item Names");
-            ArrayList<String> taskItemDescription = (ArrayList<String>) jsonObject.get("Task Item Descriptions");
-            ArrayList<String> taskItemStatus = (ArrayList<String>) jsonObject.get("Task Item Statuses");
-            long numTasks = (Long) jsonObject.get("numTasks");
-            long numCompleted = (Long) jsonObject.get("numCompleted");
-            long numInProgress = (Long) jsonObject.get("numInProgress");
-            long numNotStarted = (Long) jsonObject.get("numNotStarted");
-            addParam(listOfTaskItems, taskItemNames, taskItemDescription, taskItemStatus);
-            toDoList = new ToDoList(listOfTaskItems, numTasks, numNotStarted, numCompleted, numInProgress);
+            JsonReader reader = new JsonReader(new File(TODO_FILE));
+            toDoList = reader.unpackData();
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void addParam(
-            ArrayList<TaskItem> lti, ArrayList<String> tin, ArrayList<String> tid, ArrayList<String> tis) {
-        for (int i = 0; i < tin.size(); i++) {
-            String taskName = tin.get(i);
-            String taskDescription = tid.get(i);
-            String taskStatus = tis.get(i);
-            lti.add(new TaskItem(taskName, taskDescription, taskStatus));
-        }
-    }
 
     // Reference: TableRenderDemoProject from Oracle
     // https://docs.oracle.com/javase/tutorial/uiswing/examples/components/index.html#TableRenderDemo
@@ -225,6 +204,7 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
             if (mainMenu.getSelectedIndex() == 1) {
                 saveData(toDoList);
             } else if (mainMenu.getSelectedIndex() == 2) {
+                // TODO: If there is data in the table,
                 loadToDoList();
                 tableModel.setRowCount(0);
                 int c = 0;
