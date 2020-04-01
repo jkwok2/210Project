@@ -51,9 +51,12 @@ First, I added an exception to changeTaskStatus(String newStatus) to highlight a
 My exception guards against that. In the GUI, this is tried when the user clicks the status box. An print statement on 
 the terminal appears along with the stack trace which catches the exception.
 
-Second, I would add an exception to change TaskName, when the taskname was being 
-changed to an empty field from an already populated field. This is an exception because it is unlikely that a user
-would want to 
+Second, I changed changeTaskName(String newTaskName) where an exception would be thrown if it was changed to an empty field.
+This was useful because having an empty task name in the GUI and changing the description would cause the whole program
+to crash. I have now made it so that you cannot have an empty field under in the tableModelListener. If the taskName
+is changed to anything else that is not "", the method runs normally. If the user changes the Task Name to "", however,
+the JLabel at the top of the program will update to indicate that no empty task names are allowed, as well as restoring 
+the task name to a holder (instead of leaving it empty, which would crash the program).
 
 Task 3 - Cohesion Issues:
 

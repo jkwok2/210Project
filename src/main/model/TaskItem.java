@@ -1,6 +1,8 @@
 package model;
 
+import exceptions.EmptyException;
 import exceptions.NonStatusException;
+import sun.invoke.empty.Empty;
 
 public class TaskItem {
     private String taskName;
@@ -21,8 +23,12 @@ public class TaskItem {
 
     // TODO: Create Exception if you are charging a non-empty field to an empty one
     // EFFECTS: Gets the name of a TaskItem
-    public void changeTaskName(String taskName) {
-        this.taskName = taskName;
+    public void changeTaskName(String newTaskName) throws EmptyException {
+        if (newTaskName.equals("")) {
+            throw new EmptyException();
+        } else {
+            this.taskName = newTaskName;
+        }
     }
 
     // EFFECTS: Gets the description of a TaskItem

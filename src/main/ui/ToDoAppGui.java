@@ -1,5 +1,6 @@
 package ui;
 
+import exceptions.EmptyException;
 import exceptions.NonStatusException;
 import model.TaskItem;
 import model.ToDoList;
@@ -37,6 +38,7 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
     private DefaultTableModel tableModel;
     private String taskName;
     private JLabel counter;
+    private JLabel instructions;
 
     String[] menuItems = {"Options - Select Below", "Save Data", "Load Data"};
     String[] columnNames = {"Name", "Description", "Status"};
@@ -87,7 +89,12 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
             if (col == 0) {
                 String text = (String) listPanel.getModel().getValueAt(row, col);
                 TaskItem ti = toDoList.getTaskItem(e.getFirstRow());
-                ti.changeTaskName(text);
+                try {
+                    ti.changeTaskName(text);
+                } catch (EmptyException ex) {
+                    instructions.setText("Welcome to Jeff's ToDoList - no empty task names allowed!");
+                    listPanel.setValueAt("Sample Task Name", row, col);
+                }
             } else if (col == 1) {
                 String text = (String) listPanel.getModel().getValueAt(row, col);
                 String taskName = (String) listPanel.getModel().getValueAt(row, 0);
@@ -180,18 +187,14 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
         statusColumn.setCellRenderer(renderer);
     }
 
-    private String topTextPane() {
-        return "Welcome to Jeff's ToDoList!";
-    }
-
 
     private JPanel getMenu() {
         // Adds panel with layout
         JPanel topPane = new JPanel();
         topPane.setLayout(new BoxLayout(topPane, BoxLayout.Y_AXIS));
 
-        JLabel instructions = new JLabel();
-        instructions.setText(topTextPane());
+        instructions = new JLabel();
+        instructions.setText("Welcome to Jeff's ToDoList!");
 
         counter = new JLabel();
         resetMenuText();
@@ -313,7 +316,11 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
 
     private void addTask(JTextField taskName) {
         taskItem = new TaskItem();
-        taskItem.changeTaskName(taskName.getText());
+        try {
+            taskItem.changeTaskName(taskName.getText());
+        } catch (EmptyException e) {
+            e.printStackTrace();
+        }
         toDoList.addTask(taskItem);
         System.out.print("Task Added: " + taskName.getText() + "\n");
     }
