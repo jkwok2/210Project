@@ -4,7 +4,6 @@ import exceptions.EmptyException;
 import exceptions.NonStatusException;
 import model.TaskItem;
 import model.ToDoList;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import persistence.JsonReader;
 import persistence.JsonWriter;
