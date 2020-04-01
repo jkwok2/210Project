@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.NonStatusException;
+
 public class TaskItem {
     private String taskName;
     private String description;
@@ -28,27 +30,12 @@ public class TaskItem {
         this.description = taskDescription;
     }
 
-    // TODO: Create Exception anything that's Not Started, In Progress, or Completed
-    public void changeTaskStatus(String newStatus) {
-        this.status = newStatus;
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Sets status to InProgress
-    public void changeTaskStatusToInProgress() {
-        this.status = "In Progress";
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Sets status to Completed
-    public void changeTaskStatusToCompleted() {
-        this.status = "Completed";
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Sets status to NotStarted
-    public void changeTaskStatusToNotStarted() {
-        this.status = "Not Started";
+    public void changeTaskStatus(String newStatus) throws NonStatusException {
+        if (newStatus.equals("Not Started") || newStatus.equals("In Progress") || newStatus.equals("Completed")) {
+            this.status = newStatus;
+        } else {
+            throw new NonStatusException();
+        }
     }
 
     // EFFECTS: Returns the name of a TaskItem

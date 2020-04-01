@@ -3,6 +3,7 @@ package persistence;
 import static org.junit.jupiter.api.Assertions.*;
 import static persistence.JsonWriter.*;
 
+import exceptions.NonStatusException;
 import model.TaskItem;
 import model.ToDoList;
 import org.json.simple.JSONArray;
@@ -24,7 +25,7 @@ public class JsonWriterTests {
     TaskItem taskItem4;
 
     @BeforeEach
-    void runBefore() {
+    void runBefore() throws NonStatusException {
         todoList1 = new ToDoList();
         taskItem1 = new TaskItem();
         taskItem1.changeTaskName("Task 1");

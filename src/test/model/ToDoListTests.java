@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import exceptions.NonStatusException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,7 +43,7 @@ class ToDoListTests {
     }
 
     @Test
-    void testRemoveTaskItemNotStarted() {
+    void testRemoveTaskItemNotStarted() throws NonStatusException {
         todoList2.removeTask(2);
         assertEquals(3, todoList2.toDoList.size());
         taskItem1.changeTaskStatus("In Progress");
@@ -52,7 +53,7 @@ class ToDoListTests {
     }
 
     @Test
-    void testRemoveTaskItemInProgress() {
+    void testRemoveTaskItemInProgress() throws NonStatusException {
         taskItem1.changeTaskStatus("In Progress");
         todoList2.addNumInProgress();
         todoList2.subNumNotStarted();
@@ -61,7 +62,7 @@ class ToDoListTests {
     }
 
     @Test
-    void testRemoveTaskItemCompleted() {
+    void testRemoveTaskItemCompleted() throws NonStatusException {
         taskItem1.changeTaskStatus("Completed");
         todoList2.addNumInProgress();
         todoList2.subNumNotStarted();
@@ -83,7 +84,7 @@ class ToDoListTests {
     }
 
     @Test
-    public void testTaskInProgress() {
+    public void testTaskInProgress() throws NonStatusException {
         taskItem1.changeTaskStatus("In Progress");
         todoList2.addNumInProgress();
         todoList2.subNumNotStarted();
@@ -99,7 +100,7 @@ class ToDoListTests {
     }
 
     @Test
-    public void testGetNumberOfTasksStarted() {
+    public void testGetNumberOfTasksStarted() throws NonStatusException {
         assertEquals(4, todoList2.getNumberOfTasksNotStarted());
         taskItem3.changeTaskStatus("In Progress");
         todoList2.addNumInProgress();
@@ -124,11 +125,11 @@ class ToDoListTests {
     }
 
     @Test
-    public void testChangeTaskStatus() {
+    public void testChangeTaskStatus() throws NonStatusException {
         assertEquals("Not Started", todoList2.getTaskItem(0).getStatus());
-        todoList2.getTaskItem(0).changeTaskStatusToInProgress();
+        todoList2.getTaskItem(0).changeTaskStatus("In Progress");
         assertEquals("In Progress", todoList2.getTaskItem(0).getStatus());
-        todoList2.getTaskItem(1).changeTaskStatusToCompleted();
+        todoList2.getTaskItem(1).changeTaskStatus("Completed");
         assertEquals("Completed", todoList2.getTaskItem(1).getStatus());
     }
 

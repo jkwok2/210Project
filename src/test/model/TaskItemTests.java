@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import exceptions.NonStatusException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,21 +18,23 @@ public class TaskItemTests {
     }
 
     @Test
+    public void testChangeTaskStatusNotValid() {
+        try {
+            taskItem1.changeTaskStatus("Invalid Status");
+            fail("Should not have reached this point.");
+        } catch (NonStatusException e) {
+            System.out.println("This is not a Valid Status.");
+        }
+    }
+
+    @Test
     public void testChangeTaskStatus() {
-        taskItem1.changeTaskStatus("In Progress");
-        assertEquals("In Progress", taskItem1.getStatus());
-    }
-
-    @Test
-    public void testNotStarted() {
-        taskItem1.changeTaskStatusToNotStarted();
-        assertEquals("Not Started", taskItem1.getStatus());
-    }
-
-    @Test
-    public void testChangeCompleted() {
-        taskItem1.changeTaskStatusToCompleted();
-        assertEquals("Completed", taskItem1.getStatus());
+        try {
+            taskItem1.changeTaskStatus("In Progress");
+            assertEquals("In Progress", taskItem1.getStatus());
+        } catch (NonStatusException e) {
+            fail("Was not expecting an exception.");
+        }
     }
 
     @Test

@@ -1,5 +1,6 @@
 package ui;
 
+import exceptions.NonStatusException;
 import model.TaskItem;
 import model.ToDoList;
 import org.json.simple.JSONObject;
@@ -106,7 +107,12 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
         int toDoListRow = toDoList.taskPosition(taskName);
         TaskItem ti = toDoList.getTaskItem(toDoListRow);
         String previousStatus = ti.getStatus();
-        ti.changeTaskStatus(text);
+        try {
+            ti.changeTaskStatus(text);
+        } catch (NonStatusException e) {
+            System.out.println("This is not a valid status.");
+            e.printStackTrace();
+        }
         String newStatus = ti.getStatus();
         tableModelListenerStatusChangedSwitch(previousStatus, newStatus);
     }

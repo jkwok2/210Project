@@ -2,6 +2,7 @@ package persistence;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import exceptions.NonStatusException;
 import model.TaskItem;
 import model.ToDoList;
 import org.json.simple.JSONObject;
@@ -26,7 +27,7 @@ public class JsonReaderTests {
     TaskItem taskItem4;
 
     @BeforeEach
-    void runBefore() throws FileNotFoundException {
+    void runBefore() throws FileNotFoundException, NonStatusException {
         todoList1 = new ToDoList();
         taskItem1 = new TaskItem();
         taskItem1.changeTaskName("Task 1");

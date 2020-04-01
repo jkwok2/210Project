@@ -34,7 +34,7 @@ public class ToDoList {
     // REQUIRES: pos > 0
     // MODIFIES: this
     // EFFECTS: Given pos, remove that specific item in the toDoList
-    public ArrayList<TaskItem> removeTask(int pos) {
+    public void removeTask(int pos) {
         TaskItem ti;
         ti = toDoList.get(pos);
         if (ti.getStatus().equals("Not Started")) {
@@ -45,7 +45,6 @@ public class ToDoList {
             numCompleted--;
         }
         toDoList.remove(ti);
-        return toDoList;
     }
 
     public ArrayList<TaskItem> getToDoList() {
