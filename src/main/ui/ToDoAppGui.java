@@ -32,7 +32,6 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
     //Fields
     private static final String TODO_FILE = "./data/todo_data.json";
     private ToDoList toDoList;
-    private TaskItem taskItem;
     private JTable listPanel;
     private DefaultTableModel tableModel;
     private String taskName;
@@ -50,7 +49,6 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
         this.setSize(500, 500);
 
         // Instantiates taskItem, and toDoList.
-        taskItem = new TaskItem();
         toDoList = new ToDoList();
 
         // Makes Table
@@ -314,7 +312,7 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
     }
 
     private void addTask(JTextField taskName) {
-        taskItem = new TaskItem();
+        TaskItem taskItem = new TaskItem();
         try {
             taskItem.changeTaskName(taskName.getText());
         } catch (EmptyException e) {
