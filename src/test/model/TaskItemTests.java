@@ -53,6 +53,8 @@ public class TaskItemTests {
         try {
             taskItem1.changeTaskStatus("In Progress");
             assertEquals("In Progress", taskItem1.getStatus());
+            taskItem2.changeTaskStatus("Completed");
+            assertEquals("Completed", taskItem2.getStatus());
         } catch (NonStatusException e) {
             fail("Was not expecting an exception.");
         }

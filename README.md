@@ -45,7 +45,9 @@ Save state of application: Menu dropdown 'Save Data' under 'Options - Select Bel
 Load state of application: Menu dropdown 'Load Data' under 'Options - Select Below'
 
 ## Phase 4
-Task 2: I have chosen to make my TaskItem class Robust.
+Task 2: 
+
+I have chosen to make my TaskItem class Robust.
 First, I added an exception to changeTaskStatus(String newStatus) to highlight any change that would make the status not "Completed",
 "In Progress", or "Not Started". Because the parameter takes in a String, it could take in any value like "gibberish".
 My exception guards against that. In the GUI, this is tried when the user clicks the status box. An print statement on 
@@ -76,5 +78,6 @@ Originally, to change the status of a task, there were three methods used in the
 task...ToDo(), where ... was either Completed, InProgress, or NotStarted. These methods called another method within 
 the TaskItem Class, which actually changed the status (by modifying the TaskItem field). It would the increment the 
 counter. I realized this was coupling because changing the method in the ToDoList resulted in the method within the other
-class breaking. Once fixed, I no longer have this problem. I thus separated these and rewrote the method to change status as changeTaskStatus(String newStatus).
-I wrote a new method just to add and subtract from the counter. Finally, I modified the tests which called the old methods.
+class breaking. Once fixed, I no longer have this problem. I thus separated these and rewrote the method to change status 
+as changeTaskStatus(String newStatus). I wrote a new method just to add and subtract from the counter. Finally, I 
+modified the tests which called the old methods.
