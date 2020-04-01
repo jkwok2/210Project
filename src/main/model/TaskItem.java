@@ -20,7 +20,7 @@ public class TaskItem {
         this.status = status;
     }
 
-    // TODO: Create Exception if you are charging a non-empty field to an empty one
+    // MODIFIES: This
     // EFFECTS: Gets the name of a TaskItem
     public void changeTaskName(String newTaskName) throws EmptyException {
         if (newTaskName.equals("")) {
@@ -30,11 +30,14 @@ public class TaskItem {
         }
     }
 
+    // MODIFIES: This
     // EFFECTS: Gets the description of a TaskItem
     public void changeDescription(String taskDescription) {
         this.description = taskDescription;
     }
 
+    // MODIFIES: This
+    // EFFECTS: Changes task status
     public void changeTaskStatus(String newStatus) throws NonStatusException {
         if (newStatus.equals("Not Started") || newStatus.equals("In Progress") || newStatus.equals("Completed")) {
             this.status = newStatus;

@@ -26,6 +26,7 @@ public class ToDoList {
         this.numInProgress = numInProgress.intValue();
     }
 
+    // EFFECTS: Adds task and increments counter
     public void addTask(TaskItem ti) {
         toDoList.add(ti);
         numNotStarted++;
