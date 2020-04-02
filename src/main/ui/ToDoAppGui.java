@@ -336,8 +336,7 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
             clip.open(audioInputStream);
             clip.start();
         } catch (Exception ex) {
-            System.out.println("Error with playing sound.");
-            ex.printStackTrace();
+            System.out.println("Note - no sounds in this jar");
         }
     }
 
