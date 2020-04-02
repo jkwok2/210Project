@@ -68,7 +68,7 @@ associated persistence class tests.
 
 B: I noticed within the GUI class that the loadToDoList() method contained code that did not involve the GUI, but rather
 included reading the JSON File, and converting it into a filled ToDoList. I moved this code into the JsonReader class to
-again improve cohesion. In particular, see the removal of lines 45-56 in my GUI class on my first commit March 31.
+again improve cohesion. In particular, see the removal of lines 45-56 in my GUI class on my first commit "Cohesion - separated Editor Persistence Class..." March 31.
 
 Task 3 - Coupling Issues: 
  
@@ -80,4 +80,4 @@ the TaskItem Class, which actually changed the status (by modifying the TaskItem
 counter. I realized this was coupling because changing the method in the ToDoList resulted in the method within the other
 class breaking. Once fixed, I no longer have this problem. I thus separated these and rewrote the method to change status 
 as changeTaskStatus(String newStatus). I wrote a new method just to add and subtract from the counter. Finally, I 
-modified the tests which called the old methods.
+modified the tests which called the old methods. See the commit - "Phase 4 - Coupling..." made on March 31st. 
