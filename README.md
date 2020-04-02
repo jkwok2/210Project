@@ -80,4 +80,4 @@ the TaskItem Class, which actually changed the status (by modifying the TaskItem
 counter. I realized this was coupling because changing the method in the ToDoList resulted in the method within the other
 class breaking. Once fixed, I no longer have this problem. I thus separated these and rewrote the method to change status 
 as changeTaskStatus(String newStatus). I wrote a new method just to add and subtract from the counter. Finally, I 
-modified the tests which called the old methods. See the commit - "Phase 4 - Coupling..." made on March 31st. 
+modified the tests which called the old methods. See the commit - "Phase 4 - Coupling..." made on March 31st.  
