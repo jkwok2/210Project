@@ -210,7 +210,6 @@ public class ToDoAppGui extends JFrame implements ActionListener, DocumentListen
             if (mainMenu.getSelectedIndex() == 1) {
                 saveData(toDoList);
             } else if (mainMenu.getSelectedIndex() == 2) {
-                // TODO: If there is data in the table,
                 loadToDoList();
                 tableModel.setRowCount(0);
                 int c = 0;
